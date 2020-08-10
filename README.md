@@ -22,7 +22,7 @@ Options are set via query parameters:
 
   This is useful for testing, when the test data is in the past or future.
 
-  If no timezone offset is specified, assumes local time.  This is passed verbatim to [JavaScript's `Date` constructor][date].
+  This is passed verbatim to [JavaScript's `Date` constructor][date].
 
   Example: `?lt=2020-04-17T12:30:00+02:00` treats the load time as 2020-04-17 at 12:30 UTC+2.
 
