@@ -18,7 +18,7 @@ Options are set via query parameters:
 
   **Example:** `?r=Magenta Room` displays events from `Magenta Room`.
 
-* `lt` **(optional, datetime)**: Time to treat as the "load time" of this page, which becomes a persistent offset when handling the schedule.
+* `lt` **(optional, datetime)**: Time to treat as the "load time" of this page, which becomes a persistent offset when handling the schedule and displaying conference time.
 
   This is useful for testing, when the test data is in the past or future.
 
@@ -31,6 +31,8 @@ Options are set via query parameters:
 * Only today's schedule is only loaded at start-up. You need to reload the page after passing the start of a PretalX day (04:00 in the event's timezone).
 
 * If there are no events _at all_ scheduled for a day, `NO_EVENTS_TODAY` is shown, even if no room (`?r=`) was specified.
+
+* The `Conference time` indicator uses local time of the browser, but events use local time of the conference.
 
 [date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
 [pretalx-schedule]: https://pretalx.com/democon/schedule/export/schedule.json

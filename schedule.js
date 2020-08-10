@@ -25,6 +25,7 @@ const ERROR_MESSAGE_2 = ':(';
 const startingAtElem = document.getElementById('starting-at');
 const titleElem = document.getElementById('title');
 const presenterElem = document.getElementById('presenter');
+const nowElem = document.getElementById('now');
 const options = getOptions();
 const roomSchedule = [];
 
@@ -140,7 +141,7 @@ function getCurrentOrNextEvent(nowMillis) {
 
 		if (event.startMillis > nowMillis) {
 			// Upcoming event, is it the latest?
-			if (!nextEvent || nextEvent.startMillis < event.startMillis) {
+			if (!nextEvent || nextEvent.startMillis > event.startMillis) {
 				nextEvent = event;
 			}
 		}
@@ -160,7 +161,7 @@ function updateDisplay() {
 		titleElem.innerText = FINISHED_FOR_DAY_TITLE;
 		presenterElem.innerText = FINISHED_FOR_DAY_MESSAGE.replace('{room}', options.room);
 		return;
-	} else if (event.startTime > nowMillis) {
+	} else if (event.startMillis > nowMillis) {
 		// Upcoming event
 		startingAtElem.innerText = UPCOMING_EVENT_TITLE.replace('{room}', options.room).replace('{time}', event.start);
 	} else {
@@ -172,6 +173,13 @@ function updateDisplay() {
 
 }
 
+function updateClock() {
+	var time = new Date((new Date()).getTime() + options.timeWarp);
+	nowElem.innerText = (
+		('0' + time.getHours()).slice(-2) +     // hour
+		((time.getSeconds() % 2) ? ':' : ' ') + // flashing :
+		('0' + time.getMinutes()).slice(-2));   // minute
+}
 
 function fatal(message) {
 	startingAtElem.innerText = ERROR_MESSAGE_1;
@@ -180,6 +188,8 @@ function fatal(message) {
 }
 
 (() => {
+	updateClock();
+	setInterval(updateClock, 1000);
 	getSchedule().then((scheduleData) => {
 		// Find the day to work with for this conference
 		var today = null;
