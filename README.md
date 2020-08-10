@@ -24,7 +24,7 @@ Options are set via query parameters:
 
   If no timezone offset is specified, assumes local time.  This is passed verbatim to [JavaScript's `Date` constructor][date].
 
-  Example: `?lt=2020-04-17T12:30:00+02:00` treats the load time as 2020-04-07 at 12:30 UTC+2.
+  Example: `?lt=2020-04-17T12:30:00+02:00` treats the load time as 2020-04-17 at 12:30 UTC+2.
 
 ## Notes
 
