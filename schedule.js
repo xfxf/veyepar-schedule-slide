@@ -2,7 +2,7 @@
 
 // Shown when there are no more events today in a room.
 const FINISHED_FOR_DAY_TITLE = 'Finished for the day!';
-const FINISHED_FOR_DAY_MESSAGE = 'Today\'s proceedings in {room} have finished.';
+const FINISHED_FOR_DAY_MESSAGE = 'Proceedings in {room} have finished.';
 
 // Shown when there are no days of the conference that are today.
 // Query parameter ?lt=(ISO8601 DateTime) can activate a time-warp for testing...
@@ -14,9 +14,10 @@ const UPCOMING_EVENT_TITLE = 'Starting at {time} in {room}';
 // Shown when there's an event in a room right now.
 const CURRENT_EVENT_TITLE = 'Now in {room}';
 
-// PretalX schedule JSON URL
+// pretalx schedule JSON URL
 // https://pretalx.com/democon/schedule/export/schedule.json
-const SCHEDULE_URL = './democon-schedule.json';
+// Cache bust every 5 minutes.
+const SCHEDULE_URL = './democon-schedule.json?_=' + Math.floor((new Date()).getTime() / 300000);
 
 // First line of error text
 const ERROR_MESSAGE_1 = 'Well, this is embarrassing.';
@@ -28,6 +29,15 @@ const presenterElem = document.getElementById('presenter');
 const nowElem = document.getElementById('now');
 const options = getOptions();
 const roomSchedule = [];
+
+/**
+ * Displays an error message on fatal errors.
+ */
+function fatal(message) {
+	startingAtElem.innerText = ERROR_MESSAGE_1;
+	titleElem.innerText = ERROR_MESSAGE_2;
+	presenterElem.innerText = message;
+}
 
 /**
  * Get all passed query parameters to the page.
@@ -67,33 +77,53 @@ function getQueryParams() {
 	return ret;
 }
 
+/**
+ * Parse all options passed to the page.
+ */
 function getOptions() {
 	const params = getQueryParams();
+
+	// For testing: set `lt` to a time to treat as the "load time" of this page.
+	var timeWarp = 0;
+	if (params['lt']) {
+		timeWarp = ((new Date(params['lt'])).getTime() - (new Date()).getTime());
+	}
+	if (Number.isNaN(timeWarp)) {
+		timeWarp = 0;
+	}
+
 	return {
 		// Select the room that we're in
 		room: params['r'],
-
-		// For testing: set `lt` to a time to treat as the "load time" of this page.
-		timeWarp: params['lt'] ? ((new Date(params['lt'])).getTime() - (new Date()).getTime()) : 0,
-
-		// TODO
+		timeWarp: timeWarp,
 	};
 }
 
+/**
+ * Loads the schedule JSON.
+ *
+ * Returns a Promise, resolved with the parsed schedule JSON.
+ */
 function getSchedule() {
 	return new Promise((resolve, reject) => {
 		const req = new XMLHttpRequest();
 		req.addEventListener('load', () => {
 			if (req.status == 200) {
-				const schedule = JSON.parse(req.response)['schedule'];
+				var schedule;
+				try {
+					schedule = JSON.parse(req.response)['schedule'];
+				} catch (e) {
+					reject('Error parsing schedule: ' + e);
+					return;
+				}
 
 				if (!schedule || schedule['version'] != 'v1.3') {
-					reject('Unhandled schedule schema version');
+					reject('Unsupported schedule schema: ' + schedule['version']);
 				} else {
 					resolve(schedule);
 				}
 			} else {
-				reject('HTTP error ' + req.status);
+				reject('Error loading schedule: HTTP ' + req.status);
 			}
 		});
 		req.addEventListener('error', () => {
@@ -105,9 +135,10 @@ function getSchedule() {
 	});
 }
 
+/**
+ * Parses a pretalx duration string into a number of minutes.
+ */
 function parseDuration(duration) {
-	// Parse a pretalx duration into a number of minutes.
-
 	// https://github.com/pretalx/pretalx/blob/10993118f711e395995a59cf150e18cca9f69451/src/pretalx/common/serialize.py#L4
 	// Format is:
 	// - days:hours:minutes
@@ -151,6 +182,20 @@ function getCurrentOrNextEvent(nowMillis) {
 	return nextEvent;
 }
 
+/**
+ * Formats a Date into a 24-hour time for display: HH:MM.
+ */
+function formatTime(time, blinky = false) {
+	return (
+		('0' + time.getHours()).slice(-2) +     // hour
+		((!blinky || time.getSeconds() % 2) ? ':' : ' ') + // blinking :
+		('0' + time.getMinutes()).slice(-2));   // minute
+}
+
+function updateClock() {
+	var time = new Date((new Date()).getTime() + options.timeWarp);
+	nowElem.innerText = formatTime(time, true);
+}
 
 function updateDisplay() {
 	const nowMillis = (new Date()).getTime() + options.timeWarp;
@@ -163,7 +208,7 @@ function updateDisplay() {
 		return;
 	} else if (event.startMillis > nowMillis) {
 		// Upcoming event
-		startingAtElem.innerText = UPCOMING_EVENT_TITLE.replace('{room}', options.room).replace('{time}', event.start);
+		startingAtElem.innerText = UPCOMING_EVENT_TITLE.replace('{room}', options.room).replace('{time}', formatTime(new Date(event.startMillis)));
 	} else {
 		// Current event
 		startingAtElem.innerText = CURRENT_EVENT_TITLE.replace('{room}', options.room);
@@ -171,20 +216,6 @@ function updateDisplay() {
 	titleElem.innerText = event.title;
 	presenterElem.innerText = event.persons.map((p) => p.public_name).join(', ');
 
-}
-
-function updateClock() {
-	var time = new Date((new Date()).getTime() + options.timeWarp);
-	nowElem.innerText = (
-		('0' + time.getHours()).slice(-2) +     // hour
-		((time.getSeconds() % 2) ? ':' : ' ') + // flashing :
-		('0' + time.getMinutes()).slice(-2));   // minute
-}
-
-function fatal(message) {
-	startingAtElem.innerText = ERROR_MESSAGE_1;
-	titleElem.innerText = ERROR_MESSAGE_2;
-	presenterElem.innerText = message;
 }
 
 (() => {
@@ -240,5 +271,7 @@ function fatal(message) {
 		// Kick-off automatic updates of the schedule
 		setInterval(updateDisplay, 1000);
 		updateDisplay();
+	}).catch((error) => {
+		fatal(error);
 	});
 })();

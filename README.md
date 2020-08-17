@@ -6,7 +6,7 @@ This is hooked up to `democon-schedule.json`, which [comes from PretalX][pretalx
 
 This needs to be run on a local web server, because this uses `XmlHttpRequest`. (eg: `python3 -m http.server -b 127.0.0.1`)
 
-![schedule screenshot](./doc/schedule1.png)
+![schedule screenshot](./screenshots/schedule-next.png)
 
 ## Options
 
