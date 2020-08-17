@@ -36,37 +36,35 @@
 
 Look up the current or next scheduled event in the room.  A current event always takes precedence over an upcoming event.
 
-The following messages will be displayed:
-
-* If there is an event currently in the room:
-
-  ```
-  Now in {room}
-  {title}
-  {presenter names}
-  ```
-  
-  ![screenshot - current event](./screenshots/schedule-now.png)
-  
-* If there is an event upcoming in the room:
-
-  ```
-  Starting at {time} in {room}
-  {title}
-  {presenter names}
-  ```
-  
-  ![screenshot - upcoming event](./screenshots/schedule-next.png)
-
-* If there is no current or upcoming event:
-  
-  ```
-  Finished for the day!
-  Proceedings in {room} have finished.
-  ```
-
-  ![screenshot - finished for day](./screenshots/schedule-finished.png)
-
 If there are multiple presenters, their (public) names are shown in the order they appear in the schedule JSON, separated by `, ` (comma and space).
 
 Times are always shown in the _browser's_ timezone, not the _schedule_.
+
+### If there is an event currently in the room:
+
+```
+Now in {room}
+{title}
+{presenter names}
+```
+
+![screenshot - current event](./screenshots/schedule-now.png)
+  
+### If there is an event upcoming in the room:
+
+```
+Starting at {time} in {room}
+{title}
+{presenter names}
+```
+
+![screenshot - upcoming event](./screenshots/schedule-next.png)
+
+### If there is no current or upcoming event:
+  
+```
+Finished for the day!
+Proceedings in {room} have finished.
+```
+
+![screenshot - finished for day](./screenshots/schedule-finished.png)
