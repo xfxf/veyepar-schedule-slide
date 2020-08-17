@@ -8,6 +8,8 @@ This needs to be run on a local web server, because this uses `XmlHttpRequest`. 
 
 ![schedule screenshot](./screenshots/schedule-next.png)
 
+**See also:** [description of slides, with more screenshots](./slides.md).
+
 ## Options
 
 Options are set via query parameters:
@@ -31,14 +33,6 @@ Options are set via query parameters:
   This is passed verbatim to [JavaScript's `Date` constructor][date].
 
   Example: `?lt=2020-04-17T12:30:00+02:00` treats the load time as 2020-04-17 at 12:30 UTC+2.
-
-## Notes
-
-* Only today's schedule is only loaded at start-up. You need to reload the page after passing the start of a PretalX day (04:00 in the event's timezone).
-
-* If there are no events _at all_ scheduled for a day, `NO_EVENTS_TODAY` is shown, even if no room (`?r=`) was specified.
-
-* The `Conference time` indicator uses local time of the browser, but events use local time of the conference.
 
 [date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
 [pretalx-schedule]: https://pretalx.com/democon/schedule/export/schedule.json
