@@ -15,14 +15,15 @@ const UPCOMING_EVENT_TITLE = 'Starting at {time} in {room}';
 const CURRENT_EVENT_TITLE = 'Now in {room}';
 
 // pretalx schedule JSON URL
-// https://pretalx.com/democon/schedule/export/schedule.json
-// Cache bust every 5 minutes.
-const SCHEDULE_URL = './democon-schedule.json?_=' + Math.floor((new Date()).getTime() / 300000);
+// https://pretalx.com/.../schedule/export/schedule.json
+// Cache bust every 5 minutes (but we don't actually reload this).
+const SCHEDULE_URL = './schedule.json?_=' + Math.floor((new Date()).getTime() / 300000);
 
 // First line of error text
 const ERROR_MESSAGE_1 = 'Well, this is embarrassing.';
 const ERROR_MESSAGE_2 = ':(';
 
+const PRETALX_VERSIONS = ['v1.1', 'v1.2', 'v1.3'];
 const startingAtElem = document.getElementById('starting-at');
 const titleElem = document.getElementById('title');
 const presenterElem = document.getElementById('presenter');
@@ -118,7 +119,7 @@ function getSchedule() {
 					return;
 				}
 
-				if (!schedule || schedule['version'] != 'v1.3') {
+				if (!schedule || PRETALX_VERSIONS.includes(schedule['version'])) {
 					reject('Unsupported schedule schema: ' + schedule['version']);
 				} else {
 					resolve(schedule);
@@ -231,7 +232,7 @@ function updateDisplay() {
 		var today = null;
 		const loadTime = new Date((new Date()).getTime() + options.timeWarp);
 		if (options.timeWarp != 0) {
-			console.log('Timewarp engaged: ' + options.timeWarp + ' ms. Current time: ' + loadTime);
+			console.log('Timewarp engaged: ' + (options.timeWarp > 0 ? '+' : '') + options.timeWarp + ' ms. Current time: ' + loadTime);
 		}
 
 		for (const day of scheduleData.conference.days) {
