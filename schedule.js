@@ -96,6 +96,7 @@ function getOptions() {
 		// Select the room that we're in
 		room: params['r'],
 		timeWarp: timeWarp,
+		clockOnly: params['c'] == '1',
 	};
 }
 
@@ -221,6 +222,10 @@ function updateDisplay() {
 (() => {
 	updateClock();
 	setInterval(updateClock, 1000);
+	if (options.clockOnly) {
+		return;
+	}
+
 	getSchedule().then((scheduleData) => {
 		// Find the day to work with for this conference
 		var today = null;

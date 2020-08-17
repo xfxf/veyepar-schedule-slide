@@ -18,19 +18,20 @@
    * This becomes the `timeWarp` option, and becomes a persistent offset for displayed times and schedule handling.
    * If this value is invalid, `timeWarp` is set to 0 (no offset).
 2. If the `lt=` query parameter is **not** specified, `timeWarp` is set to 0 (no offset).
-3. The current day's schedule is loaded:
+3. If the `c=1` query parameter is set, **the schedule will not be loaded**.  Only the conference time will be displayed.
+4. The current day's schedule is loaded:
    * If the schedule JSON cannot be parsed, an error message is displayed, and **no further processing occurs.**
    * pretalx defines a "day" as starting at 04:00 and finishing at 03:59 in the _conference's timezone_.
    * Any `timeWarp` option is applied to this.
    * The schedule of other days is ignored.
    * The schedule is never reloaded or updated.  Updating requires replacing the schedule JSON file, and then reloading the page (`pyconau-schedule-slide`).
-4. If there is no daily schedule available:
+5. If there is no daily schedule available:
    * The message: "No events scheduled today!" is displayed.
    * **No further processing occurs.**
-5. Using the `r=` query parameter, we select the appropriate Room's schedule for that day.
+6. Using the `r=` query parameter, we select the appropriate Room's schedule for that day.
    * If the `r=` query parameter is not specified, or an unknown Room is specified, an error is displayed with a list of valid room names for the day, and **no further processing occurs.**
-6. The events in the room are sorted by start time, and pushed into `roomSchedule`.
-7. The `updateDisplay` function is called, and scheduled to be called again every second.
+7. The events in the room are sorted by start time, and pushed into `roomSchedule`.
+8. The `updateDisplay` function is called, and scheduled to be called again every second.
 
 ## Each second (updateDisplay)
 
@@ -68,3 +69,7 @@ Proceedings in {room} have finished.
 ```
 
 ![screenshot - finished for day](./screenshots/schedule-finished.png)
+
+## In clock-only mode (?c=1):
+
+![screenshot - clock only](./screenshots/clock-only.png)

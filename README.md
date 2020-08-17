@@ -20,6 +20,10 @@ Options are set via query parameters:
 
   **Example:** `?r=Magenta Room` displays events from `Magenta Room`.
 
+* `c` **(optional, boolean)**: Only display the clock, and don't load the schedule.
+
+  Example: `?c=1`
+
 * `lt` **(optional, datetime)**: Time to treat as the "load time" of this page, which becomes a persistent offset when handling the schedule and displaying conference time.
 
   This is useful for testing, when the test data is in the past or future.
