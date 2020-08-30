@@ -10,7 +10,7 @@ html {
 }
 
 body {
-	background-image: url('./background.png');
+	background-image: url('./test.svg');
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: contain;
@@ -26,33 +26,42 @@ body {
 	width: 20vw;
 	text-align: center;
 	color: #fff;
+	text-shadow: 0 0.25vh 1vh black;
 }
 
 #now {
-	font-family: 'Roboto Mono', monospace;
+	/*font-family: "PT Sans", sans;*/
 	font-weight: 700;
 	font-size: 9vh;
 }
 
 #white {
+	background-color: white;
+	transform: rotate(-3deg);
 	position: fixed;
-	left: 0;
-	right: 0;
-	top: 69vh;
-	bottom: 0;
-	text-align: center;
+	left: -10vw;
+	right: -10vw;
+	bottom: -10vh;
+	padding: 3vh 15vw 18vh 15vw;
+	text-align: left;
 	color: #000;
+}
+#white p {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 #starting-at {
-	font-size: 2vw;
+	font-size: 3.5vw;
+	margin-right: 1.5em;
 }
 
 #title {
-	font-size: 2.5vw;
+	font-size: 4.666vw;
 	font-weight: 700;
 }
 
 #presenter {
-	font-size: 2vw;
+	font-size: 3.5vw;
 }

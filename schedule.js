@@ -9,10 +9,10 @@ const FINISHED_FOR_DAY_MESSAGE = 'Proceedings in {room} have finished.';
 const NO_EVENTS_TODAY = 'No events scheduled today!';
 
 // Shown when there's no current event in the room, but there is one upcoming.
-const UPCOMING_EVENT_TITLE = 'Starting at {time} in {room}';
+const UPCOMING_EVENT_TITLE = 'In {time}';
 
 // Shown when there's an event in a room right now.
-const CURRENT_EVENT_TITLE = 'Now in {room}';
+const CURRENT_EVENT_TITLE = 'Starting soon';
 
 // pretalx schedule JSON URL
 // https://pretalx.com/.../schedule/export/schedule.json
@@ -184,14 +184,17 @@ function getCurrentOrNextEvent(nowMillis) {
 	return nextEvent;
 }
 
+const FORMATTER = new Intl.DateTimeFormat('en-AU', {hour: 'numeric', minute: 'numeric'})
+const RELATIVE_FORMATTER = new Intl.RelativeTimeFormat('en-AU')
 /**
  * Formats a Date into a 24-hour time for display: HH:MM.
  */
 function formatTime(time, blinky = false) {
-	return (
-		('0' + time.getHours()).slice(-2) +     // hour
-		((!blinky || time.getSeconds() % 2) ? ':' : ' ') + // blinking :
-		('0' + time.getMinutes()).slice(-2));   // minute
+	return FORMATTER.format(time)
+}
+
+function formatRelativeTime(time) {
+	return `${Math.ceil(time / 60_000)} minutes`
 }
 
 function updateClock() {
@@ -208,9 +211,9 @@ function updateDisplay() {
 		titleElem.innerText = FINISHED_FOR_DAY_TITLE;
 		presenterElem.innerText = FINISHED_FOR_DAY_MESSAGE.replace('{room}', options.room);
 		return;
-	} else if (event.startMillis > nowMillis) {
+	} else if (event.startMillis > nowMillis + 60_000) {
 		// Upcoming event
-		startingAtElem.innerText = UPCOMING_EVENT_TITLE.replace('{room}', options.room).replace('{time}', formatTime(new Date(event.startMillis)));
+		startingAtElem.innerText = UPCOMING_EVENT_TITLE.replace('{room}', options.room).replace('{time}', formatRelativeTime(event.startMillis - nowMillis));
 	} else {
 		// Current event
 		startingAtElem.innerText = CURRENT_EVENT_TITLE.replace('{room}', options.room);
