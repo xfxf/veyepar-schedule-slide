@@ -9,13 +9,6 @@ html {
 	font-family: 'PT Sans', sans-serif;
 }
 
-body {
-	background-image: url('./background.png');
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: contain;
-}
-
 #clock-box {
 	font-family: 'PT Sans Narrow', sans-serif;
 	font-weight: 400;

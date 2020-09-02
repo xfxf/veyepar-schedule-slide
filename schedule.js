@@ -17,7 +17,7 @@ const CURRENT_EVENT_TITLE = 'Now in {room}';
 // pretalx schedule JSON URL
 // https://pretalx.com/.../schedule/export/schedule.json
 // Cache bust every 5 minutes (but we don't actually reload this).
-const SCHEDULE_URL = 'https://pretalx.com/pycon-au-2020/schedule.json?_=' + Math.floor((new Date()).getTime() / 300000);
+const SCHEDULE_URL = 'https://pretalx.com/pycon-au-2020/schedule/export/schedule.json?_=' + Math.floor((new Date()).getTime() / 300000);
 
 // First line of error text
 const ERROR_MESSAGE_1 = 'Well, this is embarrassing.';
