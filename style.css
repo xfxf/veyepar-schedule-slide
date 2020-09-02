@@ -12,49 +12,55 @@ html {
 #clock-box {
 	font-family: 'PT Sans Narrow', sans-serif;
 	font-weight: 400;
-	font-size: 5vh;
+	font-size: 4vh;
 	position: fixed;
-	top: 3vh;
-	right: 3vw;
-	width: 20vw;
+	top: 13vh;
+	right: -1vw;
+	width: 30vw;
 	text-align: center;
 	color: #fff;
 	text-shadow: 0 0.25vh 1vh black;
 }
 
+#clock-box p {
+	display: inline;
+	vertical-align: middle;
+}
+
 #now {
 	/*font-family: "PT Sans", sans;*/
+	padding-left: 2vh;
 	font-weight: 700;
-	font-size: 9vh;
+	font-size: 7vh;
 }
 
 #white {
-	background-color: white;
-	transform: rotate(-3deg);
+	transform: rotate(-3.5deg);
 	position: fixed;
-	left: -10vw;
-	right: -10vw;
-	bottom: -10vh;
+	left: -12vw;
+	right: -12vw;
+	bottom: -23vh;
 	padding: 3vh 15vw 18vh 15vw;
 	text-align: left;
 	color: #000;
+	opacity: 0.7;
 }
 #white p {
 	overflow: hidden;
-	white-space: nowrap;
+	height: 10vw;
 	text-overflow: ellipsis;
 }
 
 #starting-at {
-	font-size: 3.5vw;
+	font-size: 2.5vw;
 	margin-right: 1.5em;
 }
 
 #title {
-	font-size: 4.666vw;
+	font-size: 3.8vw;
 	font-weight: 700;
 }
 
 #presenter {
-	font-size: 3.5vw;
+	font-size: 2.5vw;
 }
