@@ -4,7 +4,7 @@ Tool to display information about the next speaker for [PyconlineAU 2020][pycona
 
 This should also work with other conferences using [pretalx schedule JSON files][pretalx-schedule].
 
-![screenshot - schedule in OBS](./screenshots/obs.png)
+![screenshot - schedule in OBS](./screenshots/obs.jpg)
 
 **See also:** [description of slides, with more screenshots](./slides.md).
 
