@@ -2,11 +2,8 @@
 
 ## At all times
 
-* `background.png` is shown
 * "Conference time" is shown in the top-right corner:
   * The `timeWarp` option is applied to this value.
-  * The time is always displayed in 24-hour time, `HH:MM`.
-  * The `:` (colon) blinks: on for one second, off for the next.
 * All times are displayed in the timezone that the _browser_ operates in.
   * The browser _should_ be in the same timezone as the conference schedule, but it is not _required_.
 
@@ -18,7 +15,8 @@
    * This becomes the `timeWarp` option, and becomes a persistent offset for displayed times and schedule handling.
    * If this value is invalid, `timeWarp` is set to 0 (no offset).
 2. If the `lt=` query parameter is **not** specified, `timeWarp` is set to 0 (no offset).
-3. If the `c=1` query parameter is set, **the schedule will not be loaded**.  Only the conference time will be displayed.
+3. If the `c=1` query parameter is set, **the schedule will not be loaded**.
+   * If the `m=` query parameter is set, this will be shown on the slide.
 4. The current day's schedule is loaded:
    * If the schedule JSON cannot be parsed, an error message is displayed, and **no further processing occurs.**
    * pretalx defines a "day" as starting at 04:00 and finishing at 03:59 in the _conference's timezone_.
@@ -40,36 +38,3 @@ Look up the current or next scheduled event in the room.  A current event always
 If there are multiple presenters, their (public) names are shown in the order they appear in the schedule JSON, separated by `, ` (comma and space).
 
 Times are always shown in the _browser's_ timezone, not the _schedule_.
-
-### If there is an event currently in the room:
-
-```
-Now in {room}
-{title}
-{presenter names}
-```
-
-![screenshot - current event](./screenshots/schedule-now.png)
-  
-### If there is an event upcoming in the room:
-
-```
-Starting at {time} in {room}
-{title}
-{presenter names}
-```
-
-![screenshot - upcoming event](./screenshots/schedule-next.png)
-
-### If there is no current or upcoming event:
-  
-```
-Finished for the day!
-Proceedings in {room} have finished.
-```
-
-![screenshot - finished for day](./screenshots/schedule-finished.png)
-
-## In clock-only mode (?c=1):
-
-![screenshot - clock only](./screenshots/clock-only.png)

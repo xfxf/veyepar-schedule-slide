@@ -105,6 +105,7 @@ function getOptions() {
 		room: params['r'],
 		timeWarp: timeWarp,
 		clockOnly: params['c'] == '1',
+		message: params['m'],
 	};
 }
 
@@ -221,6 +222,7 @@ function updateDisplay() {
 	updateClock();
 	setInterval(updateClock, 1000);
 	if (options.clockOnly) {
+		titleElem.innerText = (options.message || '');
 		return;
 	}
 
