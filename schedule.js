@@ -8,9 +8,6 @@ const FINISHED_FOR_DAY_MESSAGE = 'Proceedings in {room} have finished.';
 // Query parameter ?lt=(ISO8601 DateTime) can activate a time-warp for testing...
 const NO_EVENTS_TODAY = 'No events scheduled today!';
 
-// Shown when there's no current event in the room, but there is one upcoming.
-const UPCOMING_EVENT_TITLE = 'In {time}';
-
 // Shown when there's an event in a room right now.
 const CURRENT_EVENT_TITLE = 'Starting soon';
 
@@ -20,8 +17,7 @@ const CURRENT_EVENT_TITLE = 'Starting soon';
 const SCHEDULE_URL = 'https://pretalx.com/pycon-au-2020/schedule/export/schedule.json?_=' + Math.floor((new Date()).getTime() / 300000);
 
 // First line of error text
-const ERROR_MESSAGE_1 = 'Well, this is embarrassing.';
-const ERROR_MESSAGE_2 = ':(';
+const ERROR_MESSAGE = 'Well, this is embarrassing. :(';
 
 const FORMATTER = new Intl.DateTimeFormat('en-AU', {hour: 'numeric', minute: 'numeric'});
 const PRETALX_VERSIONS = ['v1.1', 'v1.2', 'v1.3'];
@@ -33,11 +29,21 @@ const options = getOptions();
 const roomSchedule = [];
 
 /**
+ * Formats a relative time in milliseconds.
+ *
+ * The time value passed is always positive (in the future).
+ */
+function formatRelativeTime(time) {
+	var mins = Math.ceil(time / 60_000);
+	return `In ${mins} minute${mins == 1 ? '' : 's'}`;
+}
+
+/**
  * Displays an error message on fatal errors.
  */
 function fatal(message) {
-	startingAtElem.innerText = ERROR_MESSAGE_1;
-	titleElem.innerText = ERROR_MESSAGE_2;
+	titleElem.innerText = ERROR_MESSAGE;
+	startingAtElem.innerText = '';
 	presenterElem.innerText = message;
 }
 
@@ -185,10 +191,6 @@ function getCurrentOrNextEvent(nowMillis) {
 	return nextEvent;
 }
 
-function formatRelativeTime(time) {
-	return `${Math.ceil(time / 60_000)} minutes`;
-}
-
 function updateClock() {
 	var time = new Date((new Date()).getTime() + options.timeWarp);
 	nowElem.innerText = FORMATTER.format(time);
@@ -205,10 +207,10 @@ function updateDisplay() {
 		return;
 	} else if (event.startMillis > nowMillis + 60_000) {
 		// Upcoming event
-		startingAtElem.innerText = UPCOMING_EVENT_TITLE.replace('{room}', options.room).replace('{time}', formatRelativeTime(event.startMillis - nowMillis));
+		startingAtElem.innerText = formatRelativeTime(event.startMillis - nowMillis);
 	} else {
 		// Current event
-		startingAtElem.innerText = CURRENT_EVENT_TITLE.replace('{room}', options.room);
+		startingAtElem.innerText = CURRENT_EVENT_TITLE;
 	}
 	titleElem.innerText = event.title;
 	presenterElem.innerText = event.persons.map((p) => p.public_name).join(', ');
