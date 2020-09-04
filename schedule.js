@@ -175,7 +175,11 @@ function getCurrentOrNextEvent(nowMillis) {
 	var nextEvent = null;
 
 	for (const event of roomSchedule) {
-		if (event.startMillis <= nowMillis && event.endMillis > nowMillis) {
+		// 15 minutes before the end of the event
+		const end15 = event.endMillis - 900_000;
+		// If the end-15m is before 10min after the start time, use original end time.
+		const end = (end15 < (event.startMillis + 600_000)) ? event.endMillis : end15;
+		if (event.startMillis <= nowMillis && end > nowMillis) {
 			// Current event!
 			return event;
 		}
