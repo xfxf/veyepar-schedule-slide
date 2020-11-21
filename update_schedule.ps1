@@ -1,1 +1,1 @@
-Invoke-WebRequest "https://pretalx.com/pycon-au-2020/schedule/export/schedule.json" -OutFile "schedule.json"
+Invoke-WebRequest "https://veyepar.nextdayvideo.com/main/C/pyconau/S/pyconau_2020.json" -OutFile "schedule.json"

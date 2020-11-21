@@ -1,2 +1,2 @@
 #!/bin/sh
-curl -o "schedule.json" "https://pretalx.com/pycon-au-2020/schedule/export/schedule.json"
+curl -o "schedule.json" "https://veyepar.nextdayvideo.com/main/C/pyconau/S/pyconau_2020.json"
