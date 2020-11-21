@@ -1,8 +1,8 @@
 # pyconline-schedule-slide
 
-Tool to display information about the next speaker for [PyconlineAU 2020][pyconau2020].
+Tool to display information about the next speaker for conferences with data in [Veyepar][].
 
-This should also work with other conferences using [pretalx schedule JSON files][pretalx-schedule].
+This was originally developed for [PyconlineAU 2020][pyconau2020].
 
 ![screenshot - schedule in OBS](./screenshots/obs.jpg)
 
@@ -10,9 +10,7 @@ This should also work with other conferences using [pretalx schedule JSON files]
 
 ## Setting up
 
-1. Provide a `schedule.json` from pretalx:
-
-   * use [test data][pretalx-schedule]: copy `democon-schedule.json` to `schedule.json`.
+1. Provide a `schedule.json` from Veyepar:
 
    * live data: `./update_schedule.sh` (shell script, requires cURL)
 
@@ -47,11 +45,11 @@ Options are set via query parameters:
 
 * `r` **(required, string)**: Room name to display events for.
 
-  This needs to match one of the keys of `schedule.conference.days[].rooms`, and is _case sensitive_.
+  This needs to match one of the values of `schedule[].location`, and is _case sensitive_.
 
-  If no room is specified, an error and a list of valid rooms for the day will be shown.
+  If no room is specified, an error and a list of valid rooms will be shown.
 
-  **Example:** `?r=Magenta Room` displays events from `Magenta Room`.
+  **Example:** `?r=Magenta%20Room` displays events from `Magenta Room`.
 
 * `c` **(optional, boolean)**: Only display the clock, and don't load the schedule.
 
@@ -71,6 +69,6 @@ Options are set via query parameters:
 
 [date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
 [pyconau2020]: https://2020.pycon.org.au/
-[pretalx-schedule]: https://pretalx.com/democon/schedule/export/schedule.json
 [ps-sign]: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_signing?view=powershell-7
 [ps-unrestricted]: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7#unrestricted
+[veyepar]: https://github.com/CarlFK/veyepar

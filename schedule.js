@@ -152,14 +152,15 @@ function getSchedule() {
 }
 
 /**
- * Parses a pretalx duration string into a number of seconds.
+ * Parses a Veyepar duration string into a number of seconds.
  */
 function parseDuration(duration) {
 	// Serialisation: https://github.com/CarlFK/veyepar/blob/d2e168161748f5076b24240844b9f4bff8695e79/dj/main/views.py#L367
-	// This dumps out the underlying Episode objects as JSON. duration defined here:
+	// This dumps out the underlying Episode objects as JSON.
+	//
+	// `Episode.duration` defined here:
 	// https://github.com/CarlFK/veyepar/blob/4337edf3a917cc4e8371f469d32669dd8c4d538b/dj/main/models.py#L284-L285
 	// This is declared as "HH:MM:SS", but is stored in a CharField.
-	//  (ノಠ益ಠ)ノ
 	duration = duration.split(':', 3);
 	return (parseInt(duration[0]) * 3600) + (parseInt(duration[1]) * 60) + parseInt(duration[2]);
 }
