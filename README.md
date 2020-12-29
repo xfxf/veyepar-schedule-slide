@@ -2,7 +2,7 @@
 
 Tool to display information about the next speaker for conferences with data in [Veyepar][].
 
-This was originally developed for [PyconlineAU 2020][pyconau2020].
+This was originally developed for [PyconlineAU 2020][pyconau2020] – the original version with pretalx support [is available in the `pretalx` branch of this repository][pretalx].
 
 ![screenshot - schedule in OBS](./screenshots/obs.jpg)
 
@@ -68,6 +68,7 @@ Options are set via query parameters:
   **Example:** `?lt=2020-04-17T12:30:00+02:00` treats the load time as 2020-04-17 at 12:30 UTC+2.
 
 [date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
+[pretalx]: https://github.com/xfxf/pyconline-schedule-slide/tree/pretalx
 [pyconau2020]: https://2020.pycon.org.au/
 [ps-sign]: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_signing?view=powershell-7
 [ps-unrestricted]: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7#unrestricted
