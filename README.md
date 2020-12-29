@@ -45,7 +45,7 @@ Options are set via query parameters:
 
 * `r` **(required, string)**: Room name to display events for.
 
-  This needs to match one of the values of `schedule[].location`, and is _case sensitive_.
+  This needs to match one of the values of `[].location` or `[].location_slug`, and is _case sensitive_.
 
   If no room is specified, an error and a list of valid rooms will be shown.
 

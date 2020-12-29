@@ -232,12 +232,13 @@ function updateDisplay() {
 
 		// Find which room should apply
 		const roomList = new Set(scheduleData.map(e => e.location));
-		if (!roomList.has(options.room)) {
-			fatal('Unknown room (?r=' + (options.room || '') + '), options: ' + JSON.stringify(Array.from(roomList)));
+		const roomSlugList = new Set(scheduleData.map(e => e.location_slug));
+		if (!(roomList.has(options.room) || roomSlugList.has(options.room))) {
+			fatal('Unknown room (?r=' + (options.room || '') + '), options: ' + Array.from(roomSlugList).join(', '));
 			return;
 		}
 
-		scheduleData = scheduleData.filter(e => e.location == options.room);
+		scheduleData = scheduleData.filter(e => e.location == options.room || e.location_slug == options.room);
 
 		// Add in start and end times as unix millis
 		for (const event of scheduleData) {
