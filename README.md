@@ -1,10 +1,12 @@
-# pyconline-schedule-slide
+# pyconline-schedule-slide (pretalx version)
 
 Tool to display information about the next speaker for [PyconlineAU 2020][pyconau2020].
 
 This should also work with other conferences using [pretalx schedule JSON files][pretalx-schedule].
 
 ![screenshot - schedule in OBS](./screenshots/obs.jpg)
+
+**Note:** This is the `pretalx` branch of the code, as used at PyconlineAU 2020, and is no longer maintained.
 
 **See also:** [description of slides, with more screenshots](./slides.md).
 
