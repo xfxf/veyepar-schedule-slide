@@ -4,8 +4,8 @@
 
 * "Conference time" is shown in the top-right corner:
   * The `timeWarp` option is applied to this value.
-* All times are displayed in the timezone that the _browser_ operates in.
-  * The browser _should_ be in the same timezone as the conference schedule, but it is not _required_.
+* The _browser's_ timezone **must** be set to the same timezone as the conference.
+  * Veyepar's schedule data does not export TZ-aware timestamps.
 
 ## At load time
 
