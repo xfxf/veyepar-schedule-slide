@@ -1,2 +1,2 @@
 #!/bin/sh
-curl -o "schedule.json" "https://veyepar.nextdayvideo.com/main/C/pyconau/S/pyconau_2020.json"
+curl -o "schedule.json" "https://portal2.nextdayvideo.com.au/main/C/lca/S/lca2021.json"

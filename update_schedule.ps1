@@ -1,1 +1,1 @@
-Invoke-WebRequest "https://veyepar.nextdayvideo.com/main/C/pyconau/S/pyconau_2020.json" -OutFile "schedule.json"
+Invoke-WebRequest "https://portal2.nextdayvideo.com.au/main/C/lca/S/lca2021.json" -OutFile "schedule.json"

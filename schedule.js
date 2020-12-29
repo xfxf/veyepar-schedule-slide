@@ -12,9 +12,9 @@ const NO_EVENTS_TODAY = 'No events scheduled today!';
 const CURRENT_EVENT_TITLE = 'Starting soon';
 
 // Veyepar schedule JSON URL
-// https://veyepar.nextdayvideo.com/main/C/{...}/S/{...}.json
+// https://portal2.nextdayvideo.com.au/main/C/{...}/S/{...}.json
 // Cache bust every 5 minutes (but we don't actually reload this).
-// const SCHEDULE_URL = 'https://veyepar.nextdayvideo.com/main/C/pyconau/S/pyconau_2020.json?_=' + Math.floor((new Date()).getTime() / 300000);
+// const SCHEDULE_URL = 'https://portal2.nextdayvideo.com.au/main/C/lca/S/lca2021.json?_=' + Math.floor((new Date()).getTime() / 300000);
 const SCHEDULE_URL = './schedule.json?_=' + Math.floor((new Date()).getTime() / 300000);
 
 // First line of error text
