@@ -11,12 +11,11 @@ html {
 
 #clock-box {
 	font-weight: 300;
-	font-size: 4vh;
+	font-size: 7vh;
 	position: fixed;
-	top: 13vh;
-	right: -1vw;
-	width: 30vw;
-	text-align: center;
+	bottom: 6vh;
+	right: 4.8vw;
+	text-align: right;
 	color: #fff;
 	text-shadow: 0 0.25vh 1vh black;
 }
@@ -27,9 +26,6 @@ html {
 }
 
 #now {
-	padding-left: 2vh;
-	font-weight: 700;
-	font-size: 7vh;
 }
 
 #white {
