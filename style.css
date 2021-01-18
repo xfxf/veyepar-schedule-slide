@@ -37,11 +37,13 @@ html {
 	left: 18.5vw;
 	right: 18.5vw;
 	top: 4vh;
+	height: 18.5vh;
 	padding: 0;
 	text-align: left;
 	color: #000;
 	font-size: 3vw;
 	font-weight: 700;
+	/* border: 1px #000 solid; */
 }
 
 #white p {
