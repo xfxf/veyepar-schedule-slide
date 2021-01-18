@@ -6,12 +6,11 @@ html, body, h1, h2, h3, p {
 }
 
 html {
-	font-family: 'PT Sans', sans-serif;
+	font-family: 'Source Sans Pro', sans-serif;
 }
 
 #clock-box {
-	font-family: 'PT Sans Narrow', sans-serif;
-	font-weight: 400;
+	font-weight: 300;
 	font-size: 4vh;
 	position: fixed;
 	top: 13vh;
@@ -34,32 +33,29 @@ html {
 }
 
 #white {
-	transform: rotate(-3.5deg);
 	position: fixed;
-	left: -12vw;
-	right: -12vw;
-	bottom: -23vh;
-	padding: 3vh 15vw 18vh 15vw;
+	left: 18.5vw;
+	right: 18.5vw;
+	top: 4vh;
+	padding: 0;
 	text-align: left;
 	color: #000;
-	opacity: 0.7;
+	font-size: 3vw;
+	font-weight: 700;
 }
+
 #white p {
 	overflow: hidden;
-	height: 10vw;
 	text-overflow: ellipsis;
 }
 
 #starting-at {
-	font-size: 2.5vw;
-	margin-right: 1.5em;
 }
 
 #title {
-	font-size: 3.8vw;
-	font-weight: 700;
+	font-size: 2.5vw;
+	font-weight: 400;
 }
 
 #presenter {
-	font-size: 2.5vw;
 }

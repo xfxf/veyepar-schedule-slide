@@ -9,7 +9,7 @@ const FINISHED_FOR_DAY_MESSAGE = 'Proceedings in {room} have finished.';
 const NO_EVENTS_TODAY = 'No events scheduled today!';
 
 // Shown when there's an event in a room right now.
-const CURRENT_EVENT_TITLE = 'Starting soon';
+const CURRENT_EVENT_TITLE = 'Starting soon:';
 
 // Veyepar schedule JSON URL
 // https://portal2.nextdayvideo.com.au/main/C/{...}/S/{...}.json
@@ -36,11 +36,14 @@ const roomSchedule = [];
 function formatRelativeTime(time) {
 	const mins = Math.ceil(time / 60_000);
 	const hours = Math.floor(time / 3600_000);
+	const days = Math.floor(time / 86_400_000);
 
-	if (mins <= 60) {
-		return `In ${mins} minute${mins == 1 ? '' : 's'}`;
+	if (hours == 0) {
+		return `In ${mins} minute${mins == 1 ? '' : 's'}:`;
+	} else if (days == 0) {
+		return `In ${hours} hour${hours == 1 ? '' : 's'}:`;
 	} else {
-		return `In ${hours} hour${hours == 1 ? '' : 's'}`;
+		return `In ${days} day${days == 1 ? '' : 's'}:`;
 	}
 }
 
