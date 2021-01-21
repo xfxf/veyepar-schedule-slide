@@ -9,18 +9,18 @@ const FINISHED_FOR_DAY_MESSAGE = 'Proceedings in {room} have finished.';
 const NO_EVENTS_TODAY = 'No events scheduled today!';
 
 // Shown when there's an event in a room right now.
-const CURRENT_EVENT_TITLE = 'Starting soon';
+const CURRENT_EVENT_TITLE = 'Starting soon:';
 
-// pretalx schedule JSON URL
-// https://pretalx.com/.../schedule/export/schedule.json
+// Veyepar schedule JSON URL
+// https://portal2.nextdayvideo.com.au/main/C/{...}/S/{...}.json
 // Cache bust every 5 minutes (but we don't actually reload this).
-const SCHEDULE_URL = 'https://pretalx.com/pycon-au-2020/schedule/export/schedule.json?_=' + Math.floor((new Date()).getTime() / 300000);
+// const SCHEDULE_URL = 'https://portal2.nextdayvideo.com.au/main/C/lca/S/lca2021.json?_=' + Math.floor((new Date()).getTime() / 300000);
+const SCHEDULE_URL = './schedule.json?_=' + Math.floor((new Date()).getTime() / 300000);
 
 // First line of error text
 const ERROR_MESSAGE = 'Well, this is embarrassing. :(';
 
 const FORMATTER = new Intl.DateTimeFormat('en-AU', {hour: 'numeric', minute: 'numeric'});
-const PRETALX_VERSIONS = ['v1.1', 'v1.2', 'v1.3'];
 const startingAtElem = document.getElementById('starting-at');
 const titleElem = document.getElementById('title');
 const presenterElem = document.getElementById('presenter');
@@ -34,8 +34,17 @@ const roomSchedule = [];
  * The time value passed is always positive (in the future).
  */
 function formatRelativeTime(time) {
-	var mins = Math.ceil(time / 60_000);
-	return `In ${mins} minute${mins == 1 ? '' : 's'}`;
+	const mins = Math.ceil(time / 60_000);
+	const hours = Math.floor(time / 3600_000);
+	const days = Math.floor(time / 86_400_000);
+
+	if (hours == 0) {
+		return `In ${mins} minute${mins == 1 ? '' : 's'}:`;
+	} else if (days == 0) {
+		return `In ${hours} hour${hours == 1 ? '' : 's'}:`;
+	} else {
+		return `In ${days} day${days == 1 ? '' : 's'}:`;
+	}
 }
 
 /**
@@ -121,14 +130,14 @@ function getSchedule() {
 			if (req.status == 200) {
 				var schedule;
 				try {
-					schedule = JSON.parse(req.response)['schedule'];
+					schedule = JSON.parse(req.response);
 				} catch (e) {
 					reject('Error parsing schedule: ' + e);
 					return;
 				}
 
-				if (!schedule || PRETALX_VERSIONS.includes(schedule['version'])) {
-					reject('Unsupported schedule schema: ' + schedule['version']);
+				if (!schedule || !Array.isArray(schedule)) {
+					reject('Incorrect type for schedule');
 				} else {
 					resolve(schedule);
 				}
@@ -146,29 +155,17 @@ function getSchedule() {
 }
 
 /**
- * Parses a pretalx duration string into a number of minutes.
+ * Parses a Veyepar duration string into a number of seconds.
  */
 function parseDuration(duration) {
-	// https://github.com/pretalx/pretalx/blob/10993118f711e395995a59cf150e18cca9f69451/src/pretalx/common/serialize.py#L4
-	// Format is:
-	// - days:hours:minutes
-	// - hours:minutes
+	// Serialisation: https://github.com/CarlFK/veyepar/blob/d2e168161748f5076b24240844b9f4bff8695e79/dj/main/views.py#L367
+	// This dumps out the underlying Episode objects as JSON.
+	//
+	// `Episode.duration` defined here:
+	// https://github.com/CarlFK/veyepar/blob/4337edf3a917cc4e8371f469d32669dd8c4d538b/dj/main/models.py#L284-L285
+	// This is declared as "HH:MM:SS", but is stored in a CharField.
 	duration = duration.split(':', 3);
-
-	// Minutes
-	var ret = parseInt(duration.pop());
-
-	const hours = parseInt(duration.pop());
-	if (hours) {
-		ret += hours * 60;
-	}
-
-	const days = parseInt(duration.pop());
-	if (days) {
-		ret += days * 1440;
-	}
-
-	return ret;
+	return (parseInt(duration[0]) * 3600) + (parseInt(duration[1]) * 60) + parseInt(duration[2]);
 }
 
 function getCurrentOrNextEvent(nowMillis) {
@@ -217,8 +214,8 @@ function updateDisplay() {
 		// Current event
 		startingAtElem.innerText = CURRENT_EVENT_TITLE;
 	}
-	titleElem.innerText = event.title;
-	presenterElem.innerText = event.persons.map((p) => p.public_name).join(', ');
+	titleElem.innerText = event.name;
+	presenterElem.innerText = event.authors;
 
 }
 
@@ -231,51 +228,31 @@ function updateDisplay() {
 	}
 
 	getSchedule().then((scheduleData) => {
-		// Find the day to work with for this conference
-		var today = null;
 		const loadTime = new Date((new Date()).getTime() + options.timeWarp);
 		if (options.timeWarp != 0) {
 			console.log('Timewarp engaged: ' + (options.timeWarp > 0 ? '+' : '') + options.timeWarp + ' ms. Current time: ' + loadTime);
 		}
 
-		for (const day of scheduleData.conference.days) {
-			const dayStart = new Date(day.day_start);
-			const dayEnd = new Date(day.day_end);
-
-			if (dayStart <= loadTime && dayEnd > loadTime) {
-				// We found today!
-				today = day;
-				break;
-			}
-		}
-
-		if (today == null) {
-			console.log('Could not find conference day for ' + loadTime);
-			console.log('Try overriding the load time with the `lt` query parameter`');
-			startingAtElem.innerText = '';
-			titleElem.innerText = NO_EVENTS_TODAY;
-			presenterElem.innerText = '';
-			return;
-		}
-
 		// Find which room should apply
-		const roomList = Object.getOwnPropertyNames(today.rooms);
-		const room = options.room ? today.rooms[options.room] : null;
-		if (!room) {
-			fatal('Unknown room (?r=' + (options.room || '') + '), options: ' + JSON.stringify(roomList));
+		const roomList = new Set(scheduleData.map(e => e.location));
+		const roomSlugList = new Set(scheduleData.map(e => e.location_slug));
+		if (!(roomList.has(options.room) || roomSlugList.has(options.room))) {
+			fatal('Unknown room (?r=' + (options.room || '') + '), options: ' + Array.from(roomSlugList).join(', '));
 			return;
 		}
+
+		scheduleData = scheduleData.filter(e => e.location == options.room || e.location_slug == options.room);
 
 		// Add in start and end times as unix millis
-		for (const event of room) {
-			event.startMillis = (new Date(event.date)).getTime();
-			event.durationMinutes = parseDuration(event.duration);
-			event.endMillis = event.startMillis + (event.durationMinutes * 60000);
+		for (const event of scheduleData) {
+			event.startMillis = (new Date(event.start)).getTime();
+			event.durationSeconds = parseDuration(event.duration);
+			event.endMillis = event.startMillis + (event.durationSeconds * 1000);
 		}
 
 		// Sort by start time.
-		room.sort((a, b) => a.startMillis - b.startMillis);
-		roomSchedule.push(...room);
+		scheduleData.sort((a, b) => a.startMillis - b.startMillis);
+		roomSchedule.push(...scheduleData);
 
 		// Kick-off automatic updates of the schedule
 		setInterval(updateDisplay, 1000);
