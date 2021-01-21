@@ -14,8 +14,8 @@ const CURRENT_EVENT_TITLE = 'Starting soon:';
 // Veyepar schedule JSON URL
 // https://portal2.nextdayvideo.com.au/main/C/{...}/S/{...}.json
 // Cache bust every 5 minutes (but we don't actually reload this).
-// const SCHEDULE_URL = 'https://portal2.nextdayvideo.com.au/main/C/lca/S/lca2021.json?_=' + Math.floor((new Date()).getTime() / 300000);
-const SCHEDULE_URL = './schedule.json?_=' + Math.floor((new Date()).getTime() / 300000);
+const SCHEDULE_URL = 'https://portal2.nextdayvideo.com.au/main/C/lca/S/lca2021.json?_=' + Math.floor((new Date()).getTime() / 300000);
+// const SCHEDULE_URL = './schedule.json?_=' + Math.floor((new Date()).getTime() / 300000);
 
 // First line of error text
 const ERROR_MESSAGE = 'Well, this is embarrassing. :(';
