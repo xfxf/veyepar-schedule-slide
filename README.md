@@ -1,4 +1,4 @@
-# pyconline-schedule-slide
+# veyepar-schedule-slide
 
 Tool to display information about the next speaker for conferences with data in [Veyepar][].
 
@@ -19,10 +19,10 @@ This was originally developed for [PyconlineAU 2020][pyconau2020] – the origin
      [Requires signing][ps-sign], [an Unrestricted execution policy][ps-unrestricted], or running with `type | powershell`:
 
      ```powershell
-     PS C:\...\pyconline-schedule-slide> type update_schedule.ps1 | powershell
+     PS C:\...\veyepar-schedule-slide> type update_schedule.ps1 | powershell
      ```
 
-2. Serve the checked-out `pyconline-schedule-slide` repository with a web server of your choice.
+2. Serve the checked-out `veyepar-schedule-slide` repository with a web server of your choice.
 
    For local development, you could use Python for this:
 
@@ -32,12 +32,16 @@ This was originally developed for [PyconlineAU 2020][pyconau2020] – the origin
 
    **Warning:** Python's built-in web server is single threaded, and browsers will hold the TCP connection open after loading. This will prevent the page from being loaded in multiple browser windows (or OBS instances).
 
-3. In OBS, create a `Browser` source:
+3. (Optional) If you wish to modify the HTML and CSS (such as change fonts), make a copy of the 'default' directory.
+
+4. In OBS, create a `Browser` source:
 
    * URL: (replace with where you're hosting this, see [options](#options) below)
    * Dimensions: 1920x1080 (or 1280x720), must be 16:9 aspect ratio.
    * Shutdown source when not visible: enable
    * Refresh browser when scene becomes active: enable
+
+  
 
 ## Options
 
@@ -76,7 +80,7 @@ Options are set via query parameters:
   **Example:** `?client=pycon&show=pycon_2021` will load in that specific schedule data, if it exists.
 
 [date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
-[pretalx]: https://github.com/xfxf/pyconline-schedule-slide/tree/pretalx
+[pretalx]: https://github.com/xfxf/veyepar-schedule-slide/tree/pretalx
 [pyconau2020]: https://2020.pycon.org.au/
 [ps-sign]: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_signing?view=powershell-7
 [ps-unrestricted]: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7#unrestricted
