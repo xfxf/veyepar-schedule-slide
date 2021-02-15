@@ -11,14 +11,12 @@ const NO_EVENTS_TODAY = 'No events scheduled today!';
 // Shown when there's an event in a room right now.
 const CURRENT_EVENT_TITLE = 'Starting soon:';
 
-// Veyepar schedule JSON URL
-// https://portal2.nextdayvideo.com.au/main/C/{...}/S/{...}.json
-// Cache bust every 5 minutes (but we don't actually reload this).
-const SCHEDULE_URL = 'https://portal.nextdayvideo.com.au/main/C/lca/S/lca2021.json?_=' + Math.floor((new Date()).getTime() / 300000);
-// const SCHEDULE_URL = './schedule.json?_=' + Math.floor((new Date()).getTime() / 300000);
-
 // First line of error text
 const ERROR_MESSAGE = 'Well, this is embarrassing. :(';
+
+// Default veyepar show & client
+const DEFAULT_CLIENT = 'lca';
+const DEFAULT_SHOW = 'lca2021';
 
 const FORMATTER = new Intl.DateTimeFormat('en-AU', {hour: 'numeric', minute: 'numeric'});
 const startingAtElem = document.getElementById('starting-at');
@@ -27,6 +25,12 @@ const presenterElem = document.getElementById('presenter');
 const nowElem = document.getElementById('now');
 const options = getOptions();
 const roomSchedule = [];
+
+// Veyepar schedule JSON URL
+// https://portal2.nextdayvideo.com.au/main/C/{...}/S/{...}.json
+// Cache bust every 5 minutes (but we don't actually reload this).
+const SCHEDULE_URL = `https://portal.nextdayvideo.com.au/main/C/${options.client}/S/${options.show}.json?_=` + Math.floor((new Date()).getTime() / 300000);
+// const SCHEDULE_URL = './schedule.json?_=' + Math.floor((new Date()).getTime() / 300000);
 
 /**
  * Formats a relative time in milliseconds.
@@ -112,6 +116,8 @@ function getOptions() {
 	return {
 		// Select the room that we're in
 		room: params['r'],
+		show: params['show'] ? params['show'] : DEFAULT_SHOW,
+		client: params['client'] ? params['client'] : DEFAULT_CLIENT,
 		timeWarp: timeWarp,
 		clockOnly: params['c'] == '1',
 		message: params['m'],
