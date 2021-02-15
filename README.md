@@ -67,6 +67,14 @@ Options are set via query parameters:
 
   **Example:** `?lt=2020-04-17T12:30:00+02:00` treats the load time as 2020-04-17 at 12:30 UTC+2.
 
+* `client` and `show` **(optional, string)**: Client and show to read schedule data for.
+
+  This should be used when wanting to feed in a different client or show to the schedule (defaults to lca, lca2021).
+
+  Should match the show/schedule in veypear.
+
+  **Example:** `?client=pycon&show=pycon_2021` will load in that specific schedule data, if it exists.
+
 [date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
 [pretalx]: https://github.com/xfxf/pyconline-schedule-slide/tree/pretalx
 [pyconau2020]: https://2020.pycon.org.au/

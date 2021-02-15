@@ -17,14 +17,15 @@
 2. If the `lt=` query parameter is **not** specified, `timeWarp` is set to 0 (no offset).
 3. If the `c=1` query parameter is set, **the schedule will not be loaded**.
    * If the `m=` query parameter is set, this will be shown on the slide.
-4. The complete schedule is loaded:
+4. If the `show=` and `client=` query parameters are set, this will fetch that specific schedule data.
+5. The complete schedule is loaded:
    * If the schedule JSON cannot be parsed, an error message is displayed, and **no further processing occurs.**
    * Any `timeWarp` option is applied to this.
    * The schedule is never reloaded or updated.  Updating requires replacing the schedule JSON file, and then reloading the page (`pyconau-schedule-slide`).
-5. Using the `r=` query parameter, we filter events from the schedule that are not in that room.
+6. Using the `r=` query parameter, we filter events from the schedule that are not in that room.
    * If the `r=` query parameter is not specified, or an unknown Room is specified, an error is displayed with a list of valid room names, and **no further processing occurs.**
-6. The events in the room are sorted by start time, and pushed into `roomSchedule`.
-7. The `updateDisplay` function is called, and scheduled to be called again every second.
+7. The events in the room are sorted by start time, and pushed into `roomSchedule`.
+8. The `updateDisplay` function is called, and scheduled to be called again every second.
 
 ## Each second (updateDisplay)
 
