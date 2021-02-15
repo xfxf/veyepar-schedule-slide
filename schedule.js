@@ -15,8 +15,8 @@ const CURRENT_EVENT_TITLE = 'Starting soon:';
 const ERROR_MESSAGE = 'Well, this is embarrassing. :(';
 
 // Default veyepar show & client
-const DEFAULT_CLIENT = 'lca';
-const DEFAULT_SHOW = 'lca2021';
+const DEFAULT_CLIENT = document.body.dataset.client;
+const DEFAULT_SHOW = document.body.dataset.show;
 
 const FORMATTER = new Intl.DateTimeFormat('en-AU', {hour: 'numeric', minute: 'numeric'});
 const startingAtElem = document.getElementById('starting-at');

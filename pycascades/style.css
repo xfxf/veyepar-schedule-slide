@@ -5,8 +5,24 @@ html, body, h1, h2, h3, p {
 	margin-block-end: 0;
 }
 
+@font-face {
+    font-family: 'Brevia-Medium';
+    src: url('05Brevia-Medium-webfont.woff2') format('woff2'),
+         url('05Brevia-Medium-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Brevia-Bold';
+    src: url('09Brevia-Bold-webfont.woff2') format('woff2'),
+         url('09Brevia-Bold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 html {
-	font-family: 'Source Sans Pro', sans-serif;
+	font-family: 'Brevia-Medium', sans-serif;
 }
 
 #clock-box {
