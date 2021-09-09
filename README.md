@@ -41,7 +41,9 @@ This was originally developed for [PyconlineAU 2020][pyconau2020] – the origin
    * Shutdown source when not visible: enable
    * Refresh browser when scene becomes active: enable
 
-  
+## Setting up a new show
+
+See `example/` for a sample show setup with custom CSS.
 
 ## Options
 
@@ -71,13 +73,30 @@ Options are set via query parameters:
 
   **Example:** `?lt=2020-04-17T12:30:00+02:00` treats the load time as 2020-04-17 at 12:30 UTC+2.
 
-* `client` and `show` **(optional, string)**: Client and show to read schedule data for.
+* `client` and `show` **(optional, string)**: Client and show to read schedule data for from Veyepar.
 
-  This should be used when wanting to feed in a different client or show to the schedule (defaults to lca, lca2021).
-
-  Should match the show/schedule in veypear.
+  By default, this uses the `data-client` and `data-show` attributes of the `<body>` tag.
 
   **Example:** `?client=pycon&show=pycon_2021` will load in that specific schedule data, if it exists.
+
+## License
+
+With the exception of per-show assets, this software is published under the Apache 2.0 License:
+
+* Copyright 2020-2021 Michael Farrell, Ryan Verner
+* Copyright 2020 Leigh Brenecki
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 [date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
 [pretalx]: https://github.com/xfxf/veyepar-schedule-slide/tree/pretalx
