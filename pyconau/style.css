@@ -1,0 +1,74 @@
+html, body, h1, h2, h3, p, div {
+	padding: 0;
+	margin: 0;
+	margin-block-start: 0;
+	margin-block-end: 0;
+}
+
+html {
+	font-family: 'PT Sans', sans-serif;
+}
+
+#clock-box {
+	font-family: 'PT Sans Narrow', sans-serif;
+	font-weight: 400;
+	font-size: 4vh;
+	position: fixed;
+	top: 13vh;
+	right: -1vw;
+	width: 30vw;
+	text-align: center;
+	color: #fff;
+	text-shadow: 0 0.25vh 1vh black;
+}
+
+#clock-box p {
+	display: inline;
+	vertical-align: middle;
+}
+
+#now {
+	padding-left: 2vh;
+	font-weight: 700;
+	font-size: 7vh;
+}
+
+#footer {
+	transform: rotate(-3.6deg);
+	position: fixed;
+	left: -12vw;
+	right: -12vw;
+	bottom: -23vh;
+	padding: 3vh 26vw 28vh 15vw;
+	text-align: left;
+	color: #000;
+	opacity: 0.7;
+}
+
+#footer #title-container {
+	max-height: 8vh;
+	line-height: 8vh;
+	font-size: 5vh;
+
+	font-weight: 700;
+	margin-bottom: 1vh;
+}
+
+#footer #title-container p {
+	border: none;
+
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+#footer #subtitle-container {
+	height: 12vh;
+	line-height: 6vh;
+	font-size: 4.5vh;
+	overflow: hidden;
+}
+
+#starting-at {
+	margin-right: 1.5em;
+}
