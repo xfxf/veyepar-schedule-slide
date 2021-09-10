@@ -18,6 +18,9 @@ const ERROR_MESSAGE = 'Well, this is embarrassing. :(';
 const DEFAULT_CLIENT = document.body.dataset.client;
 const DEFAULT_SHOW = document.body.dataset.show;
 
+// Show time remaining to next event, rather than an absolute time.
+const NEXT_EVENT_REMAINING = document.body.dataset.nextEventRemaining == '1';
+
 const FORMATTER = new Intl.DateTimeFormat('en-AU', {hour: 'numeric', minute: 'numeric'});
 const startingAtElem = document.getElementById('starting-at');
 const titleElem = document.getElementById('title');
@@ -217,7 +220,11 @@ function updateDisplay() {
 		return;
 	} else if (event.startMillis > nowMillis + 60_000) {
 		// Upcoming event
-		startingAtElem.innerText = formatRelativeTime(event.startMillis - nowMillis);
+		if (NEXT_EVENT_REMAINING) {
+			startingAtElem.innerText = formatRelativeTime(event.startMillis - nowMillis);
+		} else {
+			startingAtElem.innerText = `At ${FORMATTER.format(event.start)}:`;
+		}
 	} else {
 		// Current event
 		startingAtElem.innerText = CURRENT_EVENT_TITLE;
@@ -253,8 +260,10 @@ function updateDisplay() {
 
 		// Add in start and end times as unix millis
 		for (const event of scheduleData) {
-			event.startMillis = (new Date(event.start)).getTime();
+			event.start = new Date(event.start);
+			event.startMillis = event.start.getTime();
 			event.durationSeconds = parseDuration(event.duration);
+			event.end = new Date(event.end);
 			event.endMillis = event.startMillis + (event.durationSeconds * 1000);
 		}
 
