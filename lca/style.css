@@ -11,13 +11,13 @@ html {
 
 #clock-box {
 	font-weight: 300;
-	font-size: 7vh;
+	font-size: 6vh;
 	position: fixed;
-	bottom: 6.8vh;
-	right: 2.0vw;
+	bottom: 5.2vh;
+	right: 3.0vw;
 	text-align: right;
 	color: #fff;
-	text-shadow: 0 0.25vh 1vh black;
+	text-shadow: 0 0.3vh 0.3vh black;
 }
 
 #clock-box p {
@@ -30,8 +30,8 @@ html {
 
 #white {
 	position: fixed;
-	left: 18.5vw;
-	right: 18.5vw;
+	left: 19.5vw;
+	right: 7vw;
 	top: 4vh;
 	height: 18.5vh;
 	padding: 0;
