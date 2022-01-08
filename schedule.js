@@ -165,6 +165,7 @@ function getSchedule() {
 
 /**
  * Parses a Veyepar duration string into a number of seconds.
+ * @param {String} duration
  */
 function parseDuration(duration) {
 	// Serialisation: https://github.com/CarlFK/veyepar/blob/d2e168161748f5076b24240844b9f4bff8695e79/dj/main/views.py#L367
@@ -204,40 +205,56 @@ function getCurrentOrNextEvent(nowMillis) {
 	return nextEvent;
 }
 
+/**
+ * Set innerText property of an element, if it has changed.
+ * This avoids forcing page doing a page re-layout.
+ * @param {HTMLElement} elem The element to change.
+ * @param {String} newText New text to set.
+ */
+function setInnerText(elem, newText) {
+	if (elem.innerText != newText) {
+		elem.innerText = newText;
+	}
+}
+
+/**
+ * Updates the clock on the page.
+ * @returns Current time in milliseconds since epoch.
+ */
 function updateClock() {
-	var time = new Date((new Date()).getTime() + options.timeWarp);
-	nowElem.innerText = FORMATTER.format(time);
+	const nowMillis = (new Date()).getTime() + options.timeWarp;
+	setInnerText(nowElem, FORMATTER.format(new Date(nowMillis)));
+	return nowMillis;
 }
 
 function updateDisplay() {
-	const nowMillis = (new Date()).getTime() + options.timeWarp;
+	const nowMillis = updateClock();
 	var event = getCurrentOrNextEvent(nowMillis);
 
 	if (event == null) {
-		startingAtElem.innerText = '';
-		titleElem.innerText = FINISHED_FOR_DAY_TITLE;
-		presenterElem.innerText = FINISHED_FOR_DAY_MESSAGE.replace('{room}', options.room);
+		setInnerText(startingAtElem, '');
+		setInnerText(titleElem, FINISHED_FOR_DAY_TITLE);
+		setInnerText(presenterElem, FINISHED_FOR_DAY_MESSAGE.replace('{room}', options.room));
 		return;
 	} else if (event.startMillis > nowMillis + 60_000) {
 		// Upcoming event
 		if (NEXT_EVENT_REMAINING) {
-			startingAtElem.innerText = formatRelativeTime(event.startMillis - nowMillis);
+			setInnerText(startingAtElem, formatRelativeTime(event.startMillis - nowMillis));
 		} else {
-			startingAtElem.innerText = `At ${FORMATTER.format(event.start)}:`;
+			setInnerText(startingAtElem, `At ${FORMATTER.format(event.start)}:`);
 		}
 	} else {
 		// Current event
-		startingAtElem.innerText = CURRENT_EVENT_TITLE;
+		setInnerText(startingAtElem, CURRENT_EVENT_TITLE);
 	}
-	titleElem.innerText = event.name;
-	presenterElem.innerText = event.authors;
-
+	setInnerText(titleElem, event.name);
+	setInnerText(presenterElem, event.authors);
 }
 
 (() => {
-	updateClock();
-	setInterval(updateClock, 1000);
 	if (options.clockOnly) {
+		updateClock();
+		setInterval(updateClock, 1000);
 		titleElem.innerText = (options.message || '');
 		return;
 	}
