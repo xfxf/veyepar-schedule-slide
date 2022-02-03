@@ -27,13 +27,15 @@ html {
 
 #clock-box {
 	font-weight: 300;
-	font-size: 7vh;
+	font-size: 5vh;
 	position: fixed;
 	bottom: 5.5vh;
 	right: 37.5vw;
 	text-align: right;
-	color: #fff;
-	text-shadow: 0 0.25vh 1vh black;
+	color: #431B8C;
+	font-family: 'Brevia-Medium', sans-serif;
+	
+	
 }
 
 #clock-box p {
@@ -51,8 +53,8 @@ html {
 	top: 2vh;
 	height: 12.5vh;
 	padding: 0;
-	text-align: left;
-	color: #000;
+	text-align: center;
+	color: white;
 	font-size: 3vw;
 	font-weight: 700;
 	/* border: 1px #000 solid; */
