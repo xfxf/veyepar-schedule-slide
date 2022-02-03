@@ -27,11 +27,12 @@ html {
 
 #clock-box {
 	font-weight: 300;
-	font-size: 5vh;
+	font-size: 5.5vh;
 	position: fixed;
 	bottom: 5.5vh;
 	right: 37.5vw;
 	text-align: right;
+	font-weight: bold;
 	color: #431B8C;
 	font-family: 'Brevia-Medium', sans-serif;
 	
