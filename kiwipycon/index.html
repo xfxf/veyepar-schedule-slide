@@ -1,0 +1,44 @@
+<html>
+ <head>
+  <meta charset="utf-8">
+  <title>kiwipycon schedule slide</title>
+
+  <!--
+    Load any additional fonts from Google Fonts.
+
+    If you have proprietary fonts, then install them on the video mixer
+    instead. You will need to restart OBS after installing fonts.
+  -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet"> 
+
+  <!--
+    Per-show stylesheet.
+    Update the "?_=" parameter to force cache invalidation when you deploy a new version.
+  -->
+  <link rel="stylesheet" href="style.css?_=20220810-01">
+ </head>
+
+
+ <body data-show="kiwipyconxi" data-client="kiwipycon" data-timecaps="1" lang="en-NZ">
+  <!--
+    schedule.js expects the following element IDs. They can appear in any order.
+
+    * title: the title of the next event
+    * starting-at: the time the next event starts at
+    * presenter: the name(s) of the next event's presenter(s)
+    * now: the current time
+  -->
+  <div id="clock-box">
+	<p id="now"></p>
+  </div>
+
+  <div id="next">
+  <p><span id="starting-at"></span>&nbsp;<span id="title"></span></p>
+  <p id="presenter"></p>
+  </div>
+
+  <!-- schedule.js must come last. -->
+  <script src="../schedule.js?_=202020123-00"></script>
+ </body>
+</html>

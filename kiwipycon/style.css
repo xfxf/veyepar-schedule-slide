@@ -1,0 +1,60 @@
+html, body, h1, h2, h3, p {
+    padding: 0;
+    margin: 0;
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+
+html {
+    font-family: 'Roboto', sans-serif;
+}
+
+#clock-box {
+    font-family: 'Digital-7 Mono', monospace;
+    font-weight: 300;
+    font-size: 4.5vh;
+    position: fixed;
+    bottom: 10.0vh; /* 10.5vh; */
+    height: 4.5vh;
+    right: 3.6vw; /* 4.1vw; */
+    width: 12.4vw;
+
+    text-align: center;
+    vertical-align: middle;
+    color: black;
+    text-shadow: 0 0 0.5vh white;
+    /* border: 1px solid red; */
+}
+
+#clock-box p {
+    display: inline;
+    vertical-align: middle;
+}
+
+#next {
+    position: fixed;
+    left: 37.6vw;
+    right: 2.34vw;
+    top: 4.5vh;
+    height: 18.5vh;
+    padding: 0;
+    text-align: left;
+    color: black;
+    font-size: 4.2vh;
+    font-weight: 700;
+    text-shadow: 0 0 0.5vh white, 0 0 0.2vh white;
+    /* border: 1px solid black; */
+}
+
+#next p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#title {
+    font-weight: 400;
+}
+
+#presenter {
+    color: #ea3d4b;
+}
