@@ -21,7 +21,16 @@ const DEFAULT_SHOW = document.body.dataset.show;
 // Show time remaining to next event, rather than an absolute time.
 const NEXT_EVENT_REMAINING = document.body.dataset.nextEventRemaining == '1';
 
-const FORMATTER = new Intl.DateTimeFormat('en-AU', {hour: 'numeric', minute: 'numeric'});
+// Shown for when a next event is scheduled.
+const NEXT_EVENT_TITLE = 'At {time}:';
+
+// Capitalises the formatted time string.
+const TIME_CAPS = document.body.dataset.timecaps === '1';
+
+// Locale to use for date formatting.
+const LOCALE = document.body.lang || 'en-AU';
+
+const FORMATTER = new Intl.DateTimeFormat(LOCALE, {hour: 'numeric', minute: 'numeric'});
 const startingAtElem = document.getElementById('starting-at');
 const titleElem = document.getElementById('title');
 const presenterElem = document.getElementById('presenter');
@@ -52,6 +61,19 @@ function formatRelativeTime(time) {
 	} else {
 		return `In ${days} day${days == 1 ? '' : 's'}:`;
 	}
+}
+
+/**
+ * Formats a time in the default format.
+ * @param {Date} date input Date object
+ * @returns {String} formatted time
+ */
+function formatTime(date) {
+	let o = FORMATTER.format(date);
+	if (TIME_CAPS) {
+		o = o.toUpperCase();
+	}
+	return o;
 }
 
 /**
@@ -223,7 +245,7 @@ function setInnerText(elem, newText) {
  */
 function updateClock() {
 	const nowMillis = (new Date()).getTime() + options.timeWarp;
-	setInnerText(nowElem, FORMATTER.format(new Date(nowMillis)));
+	setInnerText(nowElem, formatTime(new Date(nowMillis)));
 	return nowMillis;
 }
 
@@ -241,7 +263,7 @@ function updateDisplay() {
 		if (NEXT_EVENT_REMAINING) {
 			setInnerText(startingAtElem, formatRelativeTime(event.startMillis - nowMillis));
 		} else {
-			setInnerText(startingAtElem, `At ${FORMATTER.format(event.start)}:`);
+			setInnerText(startingAtElem, NEXT_EVENT_TITLE.replace('{time}', formatTime(event.start)));
 		}
 	} else {
 		// Current event
