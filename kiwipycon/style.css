@@ -9,7 +9,7 @@ html {
     font-family: 'Roboto', sans-serif;
 }
 
-#clock-box {
+#clock-box, #clock-shadow {
     font-family: 'Digital-7 Mono', monospace;
     font-weight: 300;
     font-size: 4.5vh;
@@ -17,18 +17,30 @@ html {
     bottom: 10.0vh; /* 10.5vh; */
     height: 4.5vh;
     right: 3.6vw; /* 4.1vw; */
-    width: 12.4vw;
-
-    text-align: center;
-    vertical-align: middle;
-    color: black;
-    text-shadow: 0 0 0.5vh white;
+    width: 10.4vw;
+    text-align: right;
+    padding-right: 2vw;
     /* border: 1px solid red; */
 }
 
-#clock-box p {
-    display: inline;
+#clock-box {
+    color: black;    
+}
+
+#clock-shadow {
+    color: #9c9587;
+    text-shadow: 1px 1px 4px #9c9587;
+    /* Makes the blend for the shadow nicer. */
+    background-color: #a99f88;
+}
+
+#clock-box p, #clock-shadow p {
+    display: inline-block;
     vertical-align: middle;
+    width: 10vw;
+    min-width: 10vw;
+    max-width: 10vw;
+    margin-top: -0.3vh;
 }
 
 #next {
