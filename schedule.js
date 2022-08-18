@@ -11,6 +11,36 @@ const NO_EVENTS_TODAY = 'No events scheduled today!';
 // Shown when there's an event in a room right now.
 const CURRENT_EVENT_TITLE = 'Starting soon:';
 
+/**
+ * If the next event starts in less than `CURRENT_EVENT_START_SECS` seconds,
+ * treat is as the "current" event, and display `CURRENT_EVENT_TITLE`
+ * ("Starting soon"), instead of an absolute time.
+ *
+ * This can be overridden with the `data-current-event-start` attribute on the
+ * `<body>` tag.
+ *
+ * @type {number}
+ */
+const CURRENT_EVENT_START_SECS = parseInt(document.body.dataset.currentEventStartSecs) || 60;
+
+/**
+ * The maximum number of seconds _after_ an event's scheduled start time to keep
+ * treating it as the "current" event. Using this, rather than the scheduled
+ * end time, stops us advertising talks that finished very early (eg: a talk in
+ * a 50 minute slot that finished in 20 minutes).
+ *
+ * By default, this is 600 seconds (10 minutes).
+ *
+ * Events shorter than `MAX_DURATION_SECS` will treated as the "current" event
+ * for their originally scheduled time (eg: a 5 minute talk will only be current
+ * for those 5 minutes, not 10 minutes.).
+ *
+ * This can be overridden with the `data-max-duration-secs` attribute on the
+ * `<body>` tag. If an event's talks consistently start late, then increase this
+ * number.
+ */
+const MAX_DURATION_SECS = parseInt(document.body.dataset.maxDurationSecs) || 600;
+
 // First line of error text
 const ERROR_MESSAGE = 'Well, this is embarrassing. :(';
 
@@ -204,12 +234,9 @@ function getCurrentOrNextEvent(nowMillis) {
 	var nextEvent = null;
 
 	for (const event of roomSchedule) {
-		// 10 minutes after the start of the event
-		const end10 = event.startMillis + 600_000;
+		const end = Math.min(
+			event.startMillis + (MAX_DURATION_SECS * 1000), event.endMillis);
 
-		// If the start+10m is after end time, use original end time.
-		const end = (end10 > event.endMillis) ? event.endMillis : end10;
-		
 		if (event.startMillis <= nowMillis && end > nowMillis) {
 			// Current event!
 			return event;
@@ -258,7 +285,7 @@ function updateDisplay() {
 		setInnerText(titleElem, FINISHED_FOR_DAY_TITLE);
 		setInnerText(presenterElem, FINISHED_FOR_DAY_MESSAGE.replace('{room}', options.room));
 		return;
-	} else if (event.startMillis > nowMillis + 60_000) {
+	} else if (event.startMillis > nowMillis + (CURRENT_EVENT_START_SECS * 1000)) {
 		// Upcoming event
 		if (NEXT_EVENT_REMAINING) {
 			setInnerText(startingAtElem, formatRelativeTime(event.startMillis - nowMillis));
