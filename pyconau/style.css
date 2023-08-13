@@ -10,16 +10,16 @@ html {
 }
 
 #clock-box {
-	font-family: 'PT Sans Narrow', sans-serif;
-	font-weight: 400;
-	font-size: 4vh;
+	font-family: 'PT Sans', sans-serif;
+	font-weight: 700;
+	font-size: 5.0vh;
 	position: fixed;
-	top: 13vh;
-	right: -1vw;
-	width: 30vw;
+	top: 3vh;
+	left: 4.8vw;
+	width: 9.4vw;
+	height: 6.8vh;
 	text-align: center;
-	color: #fff;
-	text-shadow: 0 0.25vh 1vh black;
+	color: #5b58a6;
 }
 
 #clock-box p {
@@ -27,48 +27,39 @@ html {
 	vertical-align: middle;
 }
 
-#now {
-	padding-left: 2vh;
-	font-weight: 700;
-	font-size: 7vh;
+#footer {
+	position: fixed;
+	left: 1vw;
+	right: 17vw;
+	top: 77.6vh;
+	text-align: right;
+	color: #000;
+	font-size: 3.8vh;
 }
 
-#footer {
-	transform: rotate(-3.6deg);
-	position: fixed;
-	left: -12vw;
-	right: -12vw;
-	bottom: -23vh;
-	padding: 3vh 26vw 28vh 15vw;
-	text-align: left;
-	color: #000;
-	opacity: 0.7;
+#footer #starting-at {
+	text-transform: uppercase;
+	font-weight: 700;
+	color: #606060;
+	margin-bottom: 0.5vh;
 }
 
 #footer #title-container {
-	max-height: 8vh;
-	line-height: 8vh;
-	font-size: 5vh;
-
-	font-weight: 700;
-	margin-bottom: 1vh;
+	font-family: 'Catamaran', sans-serif;
+	max-height: 10vh;
+	line-height: 5vh;
+	margin-bottom: 0.5vh;
+	overflow: hidden;
 }
 
 #footer #title-container p {
 	border: none;
-
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow: hidden;
 }
 
 #footer #subtitle-container {
-	height: 12vh;
-	line-height: 6vh;
-	font-size: 4.5vh;
+	font-family: 'Catamaran', sans-serif;
+	max-height: 10vh;
+	line-height: 5vh;
 	overflow: hidden;
-}
-
-#starting-at {
-	margin-right: 1em;
+	font-weight: 700;
 }

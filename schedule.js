@@ -9,7 +9,7 @@ const FINISHED_FOR_DAY_MESSAGE = 'Proceedings in {room} have finished.';
 const NO_EVENTS_TODAY = 'No events scheduled today!';
 
 // Shown when there's an event in a room right now.
-const CURRENT_EVENT_TITLE = 'Starting soon:';
+const CURRENT_EVENT_TITLE = 'Starting soon';
 
 /**
  * If the next event starts in less than `CURRENT_EVENT_START_SECS` seconds,
@@ -52,7 +52,7 @@ const DEFAULT_SHOW = document.body.dataset.show;
 const NEXT_EVENT_REMAINING = document.body.dataset.nextEventRemaining == '1';
 
 // Shown for when a next event is scheduled.
-const NEXT_EVENT_TITLE = 'At {time}:';
+const NEXT_EVENT_TITLE = 'At {time}';
 
 // Capitalises the formatted time string.
 const TIME_CAPS = document.body.dataset.timecaps === '1';
@@ -60,7 +60,12 @@ const TIME_CAPS = document.body.dataset.timecaps === '1';
 // Locale to use for date formatting.
 const LOCALE = document.body.lang || 'en-AU';
 
-const FORMATTER = new Intl.DateTimeFormat(LOCALE, {hour: 'numeric', minute: 'numeric'});
+const FORMATTER = new Intl.DateTimeFormat(LOCALE, {
+	hour: 'numeric',
+	minute: 'numeric',
+	hour12: document.body.dataset.hour12 === undefined ? undefined : document.body.dataset === '1',
+});
+
 const startingAtElem = document.getElementById('starting-at');
 const titleElem = document.getElementById('title');
 const presenterElem = document.getElementById('presenter');
@@ -85,11 +90,11 @@ function formatRelativeTime(time) {
 	const days = Math.floor(time / 86_400_000);
 
 	if (hours == 0) {
-		return `In ${mins} minute${mins == 1 ? '' : 's'}:`;
+		return `In ${mins} minute${mins == 1 ? '' : 's'}`;
 	} else if (days == 0) {
-		return `In ${hours} hour${hours == 1 ? '' : 's'}:`;
+		return `In ${hours} hour${hours == 1 ? '' : 's'}`;
 	} else {
-		return `In ${days} day${days == 1 ? '' : 's'}:`;
+		return `In ${days} day${days == 1 ? '' : 's'}`;
 	}
 }
 

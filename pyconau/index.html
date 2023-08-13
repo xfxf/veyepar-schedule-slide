@@ -4,25 +4,26 @@
   <meta charset="utf-8">
   <title>Conference Schedule Slide</title>
 
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link
-    href="https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400&family=PT+Mono:wght@400;700&family=PT+Sans:wght@400;700&family=Roboto+Mono:wght@700&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="style.css?_=20210909-00">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@400;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?_=20230909-00">
 </head>
 
-<body data-show="pyconau_2021" data-client="pyconau">
+<body data-show="pyconau_2023" data-client="pyconau" data-hour12="0">
   <div id="clock-box">
-    <p>Conference time</p>
     <p id="now"></p>
   </div>
 
   <div id="footer">
+    <div>
+      <p id="starting-at"></p>
+    </div>
     <div id="title-container">
       <p id="title"></p>
     </div>
     <div id="subtitle-container">
-      <p><span id="starting-at"></span>&nbsp;<span id="presenter"></span></p>
+      <p id="presenter"></p>
     </div>
   </div>
 
