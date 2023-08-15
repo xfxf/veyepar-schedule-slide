@@ -12,11 +12,12 @@ html {
 #clock-box {
 	font-family: 'PT Sans', sans-serif;
 	font-weight: 700;
-	font-size: 5.0vh;
+	font-size: 4.5vh;
+	line-height: 6.8vh;
 	position: fixed;
 	top: 3vh;
 	left: 4.8vw;
-	width: 13.5vw;
+	width: 12.9vw;
 	height: 6.8vh;
 	text-align: center;
 	color: #5b58a6;
