@@ -21,21 +21,18 @@ html {
 	height: 6.8vh;
 	text-align: center;
 	color: #5b58a6;
-}
-
-#clock-box p {
-	display: inline;
-	vertical-align: middle;
+	/* border: 1px solid red; */
 }
 
 #footer {
 	position: fixed;
-	left: 1vw;
+	/* left: 3.5vw; - title safe */
+	left: 16vw;
 	right: 17vw;
-	top: 75.5vh;
-	text-align: right;
+	top: 75vh;
 	color: #000;
 	font-size: 3.8vh;
+	/* border: 1px blue solid; */
 }
 
 #footer #starting-at {
@@ -43,24 +40,35 @@ html {
 	font-weight: 700;
 	color: #606060;
 	margin-bottom: 0.5vh;
+	/* border: 1px red solid; */
 }
 
 #footer #title-container {
 	font-family: 'Catamaran', sans-serif;
-	max-height: 10vh;
 	line-height: 5vh;
 	margin-bottom: 0.5vh;
 	overflow: hidden;
-}
-
-#footer #title-container p {
-	border: none;
+	white-space: normal;
+	text-overflow: ellipsis;
+	line-clamp: 2;
+	/* border: 1px red solid; */
 }
 
 #footer #subtitle-container {
 	font-family: 'Catamaran', sans-serif;
-	max-height: 10vh;
-	line-height: 5vh;
-	overflow: hidden;
 	font-weight: 700;
+	line-height: 5vh;
+	/* border: 1px red solid; */
+}
+#footer p {
+	display: -webkit-box;
+	white-space: normal;
+	overflow: hidden;
+	/* Ellipsis doesn't render in Chromium:
+	 * https://bugs.chromium.org/p/chromium/issues/detail?id=1156557
+	 */
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	text-overflow: ellipsis;
+	text-align: right;
 }
