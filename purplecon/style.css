@@ -14,7 +14,7 @@ html {
 	font-size: 4vh;
 	position: fixed;
 	bottom: 2.2vh;
-	right: 15.0vw;
+	right: 25.0vw;
 	text-align: right;
 	color: #000;
 	text-shadow: none;
@@ -32,7 +32,7 @@ html {
 	position: fixed;
 	left: 2vw;
 	right: 2vw;
-	top: 2vh;
+	top: 4vh;
 	height: 18.5vh;
 	padding: 0;
 	text-align: center;
