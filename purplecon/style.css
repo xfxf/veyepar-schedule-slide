@@ -37,7 +37,7 @@ html {
 	padding: 0;
 	text-align: center;
 	color: #000;
-	font-size: 2.3vw;
+	font-size: 2.2vw;
 	font-weight: 200;
 	/* border: 1px #000 solid; */
 }
@@ -49,12 +49,15 @@ html {
 
 #starting-at {
 	font-weight: 200;
+	font-size: 2.2vw;
 }
 
 #title {
 	font-weight: 600;
+	font-size: 2.2vw;
 }
 
 #presenter {
 	font-weight: 200;
+	font-size: 2.2vw;
 }
