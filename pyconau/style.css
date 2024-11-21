@@ -16,7 +16,7 @@ html {
 	line-height: 6.8vh;
 	position: fixed;
 	top: 3vh;
-	left: 4.8vw;
+	left: 15.3125vw;
 	width: 12.9vw;
 	height: 6.8vh;
 	text-align: center;
@@ -27,19 +27,19 @@ html {
 #footer {
 	position: fixed;
 	/* left: 3.5vw; - title safe */
-	left: 16vw;
-	right: 17vw;
-	top: 75vh;
+	left: 20.3125vw;
+	right: 3.69vw;
+	top: 72.2vh;
 	color: #000;
-	font-size: 3.8vh;
+	font-size: 4.8vh;
 	/* border: 1px blue solid; */
 }
 
 #footer #starting-at {
 	text-transform: uppercase;
 	font-weight: 700;
-	color: #606060;
-	margin-bottom: 0.5vh;
+	color: #fff;
+	margin-bottom: 1.5vh;
 	/* border: 1px red solid; */
 }
 
@@ -70,5 +70,5 @@ html {
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 2;
 	text-overflow: ellipsis;
-	text-align: right;
+	text-align: left;
 }
