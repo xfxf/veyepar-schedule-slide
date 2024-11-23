@@ -63,7 +63,7 @@ const LOCALE = document.body.lang || 'en-AU';
 const FORMATTER = new Intl.DateTimeFormat(LOCALE, {
 	hour: 'numeric',
 	minute: 'numeric',
-	hour12: document.body.dataset.hour12 === undefined ? undefined : document.body.dataset === '1',
+	hour12: document.body.dataset.hour12 === undefined ? undefined : document.body.dataset.hour12 === '1',
 });
 
 const startingAtElem = document.getElementById('starting-at');
