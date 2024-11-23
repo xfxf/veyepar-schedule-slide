@@ -125,30 +125,21 @@ function fatal(message) {
  */
 function getQueryParams() {
 	const ret = {};
-	const qs = document.location.search.slice(1);
-	if (qs.length == 0) {
+	const params = new URLSearchParams(document.location.search);
+	if (params.size == 0) {
 		// no params available.
-		console.log('No query parameters specified')
+		console.error('No query parameters specified')
 		return ret;
 	}
 
-	for (const param of qs.split('&')) {
-		if (param.length == 0) {
-			// Empty token, skip
-			continue;
-		}
-
-		const kv = param.split('=', 2);
-		const key = unescape(kv[0]);
-		const val = unescape(kv[1]);
-
+	for (const [key, val] of params.entries()) {
 		if (key in ret) {
-			console.log('Ignoring redefined parameter: ' + key);
+			console.warn(`Ignoring redefined parameter: ${key}=${val}`);
 			continue;
 		}
 
 		if (val === undefined) {
-			console.log('Ignoring undefined parameter: ' + key);
+			console.warn(`Ignoring undefined parameter: ${key}`);
 			continue;
 		}
 
