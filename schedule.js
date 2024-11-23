@@ -70,6 +70,7 @@ const startingAtElem = document.getElementById('starting-at');
 const titleElem = document.getElementById('title');
 const presenterElem = document.getElementById('presenter');
 const nowElem = document.getElementById('now');
+const timeWarpElem = document.getElementById('timewarp-indicator');
 const options = getOptions();
 const roomSchedule = [];
 
@@ -267,6 +268,10 @@ function setInnerText(elem, newText) {
  * @returns Current time in milliseconds since epoch.
  */
 function updateClock() {
+	if (timeWarpElem != null) {
+		timeWarpElem.style.display = options.timeWarp != 0 ? '' : 'none';
+	}
+
 	const nowMillis = (new Date()).getTime() + options.timeWarp;
 	setInnerText(nowElem, formatTime(new Date(nowMillis)));
 	return nowMillis;

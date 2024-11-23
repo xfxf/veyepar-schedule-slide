@@ -56,3 +56,19 @@ html {
 
 #presenter {
 }
+
+#timewarp-indicator {
+	position: fixed;
+	left: 1vw;
+	top: 1vw;
+	width: 0.3vw;
+	height: 0.3vw;
+	background-color: #f00;
+	border-radius: 0.3vw;
+	border: #600 solid 0.1vw;
+	opacity: 75%;
+}
+
+#timewarp-indicator::slotted {
+	content: ' ';
+}

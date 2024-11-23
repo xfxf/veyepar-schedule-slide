@@ -16,7 +16,7 @@
     Per-show stylesheet.
     Update the "?_=" parameter to force cache invalidation when you deploy a new version.
   -->
-  <link rel="stylesheet" href="style.css?_=20200122-00">
+  <link rel="stylesheet" href="style.css?_=20241124-00">
  </head>
 
  <!--
@@ -29,11 +29,14 @@
   <!--
     schedule.js expects the following element IDs. They can appear in any order.
 
+    * timewarp-indicator (optional): displayed whenever time warp is active
     * title: the title of the next event
     * starting-at: the time the next event starts at
     * presenter: the name(s) of the next event's presenter(s)
     * now: the current time
   -->
+  <div id="timewarp-indicator"></div>
+
   <div id="clock-box">
 	<p id="now"></p>
   </div>
@@ -44,6 +47,6 @@
   </div>
 
   <!-- schedule.js must come last. -->
-  <script src="../schedule.js?_=202020123-00"></script>
+  <script src="../schedule.js?_=20241124-00"></script>
  </body>
 </html>
