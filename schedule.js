@@ -297,6 +297,50 @@ function updateDisplay() {
 }
 
 (() => {
+	document.addEventListener('keypress', (ev) => {
+		let delta = 0;
+		switch (ev.key) {
+			case 'q':
+			case 'h':
+				// -24 hours
+				delta = -86_400_000;
+				break;
+			case 'J':
+				// -30 minutes
+				delta = -1_800_000;
+				break;
+			case 'j':
+				// -5 minutes
+				delta = -300_000;
+				break;
+			case 'k':
+				// +5 minutes
+				delta = 300_000;
+				break;
+			case 'K':
+				// +30 minutes
+				delta = 1_800_000;
+				break;
+			case 'x':
+			case 'l':
+				// +24 hours
+				delta = 86_400_000;
+				break;
+			case 'n':
+				console.log('Time warp disabled');
+				options.timeWarp = 0;
+				ev.preventDefault();
+				return;
+		}
+
+		if (delta != 0) {
+			options.timeWarp += delta;
+			const nowMillis = (new Date()).getTime() + options.timeWarp;
+			console.log(`Time warp: ${options.timeWarp / 1000} seconds (press n to reset)`)
+			ev.preventDefault();
+		}
+	});
+
 	if (options.clockOnly) {
 		updateClock();
 		setInterval(updateClock, 1000);

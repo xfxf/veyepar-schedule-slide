@@ -65,9 +65,9 @@ Options are set via query parameters:
 
   **Example:** `?c=1&m=Hello%20world!`
 
-* `lt` **(optional, datetime)**: Time to treat as the "load time" of this page, which becomes a persistent offset when handling the schedule and displaying conference time.
+* `lt` **(optional, datetime)**: Time to treat as the "load time" of this page, which becomes a persistent offset (time warp) when handling the schedule and displaying conference time.
 
-  This is useful for testing, when the test data is in the past or future.
+  This is useful for testing, when the schedule data is in the past or future.
 
   This is passed verbatim to [JavaScript's `Date` constructor][date].
 
@@ -79,11 +79,21 @@ Options are set via query parameters:
 
   **Example:** `?client=pycon&show=pycon_2021` will load in that specific schedule data, if it exists.
 
+## Debugging keys
+
+* <kbd>j</kbd>: time warp backward 5 minutes
+* <kbd>Shift</kbd> <kbd>J</kbd>: time warp backward 30 minutes
+* <kbd>q</kbd> or <kbd>h</kbd>: time warp backward 24 hours
+* <kbd>k</kbd>: time warp forward 5 minutes
+* <kbd>Shift</kbd> <kbd>K</kbd>: time warp forward 30 minutes
+* <kbd>x</kbd> or <kbd>l</kbd>: time warp forward 24 hours
+* <kbd>n</kbd>: disable time warp (ie: view schedule at "now")
+
 ## License
 
 With the exception of per-show assets, this software is published under the Apache 2.0 License:
 
-* Copyright 2020-2021 Michael Farrell, Ryan Verner
+* Copyright 2020-2024 Michael Farrell, Ryan Verner
 * Copyright 2020 Leigh Brenecki
 
 Licensed under the Apache License, Version 2.0 (the "License");
