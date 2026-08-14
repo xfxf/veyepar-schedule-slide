@@ -1,90 +1,96 @@
-html, body, h1, h2, h3, p, div {
-	padding: 0;
-	margin: 0;
-	margin-block-start: 0;
-	margin-block-end: 0;
+html,
+body,
+h1,
+h2,
+h3,
+p,
+div {
+    padding: 0;
+    margin: 0;
+    margin-block-start: 0;
+    margin-block-end: 0;
 }
 
 html {
-	font-family: 'PT Sans', sans-serif;
+    font-family: 'PT Sans', sans-serif;
 }
 
 #clock-box {
-	font-family: 'PT Sans', sans-serif;
-	font-weight: 700;
-	font-size: 4.5vh;
-	line-height: 6.8vh;
-	position: fixed;
-	top: 3vh;
-	left: 15.3125vw;
-	width: 12.9vw;
-	height: 6.8vh;
-	text-align: center;
-	color: #5b58a6;
-	/* border: 1px solid red; */
+    font-family: 'PT Sans', sans-serif;
+    font-weight: 700;
+    font-size: 4.5vh;
+    line-height: 6.8vh;
+    position: fixed;
+    top: 3vh;
+    left: 15.3125vw;
+    width: 12.9vw;
+    height: 6.8vh;
+    text-align: center;
+    color: #5b58a6;
+    /* border: 1px solid red; */
 }
 
 #footer {
-	position: fixed;
-	/* left: 3.5vw; - title safe */
-	left: 20.3125vw;
-	right: 3.69vw;
-	top: 72.2vh;
-	color: #000;
-	font-size: 4.8vh;
-	/* border: 1px blue solid; */
+    position: fixed;
+    /* left: 3.5vw; - title safe */
+    left: 20.3125vw;
+    right: 3.69vw;
+    top: 72.2vh;
+    color: #000;
+    font-size: 4.8vh;
+    /* border: 1px blue solid; */
 }
 
 #footer #starting-at {
-	text-transform: uppercase;
-	font-weight: 700;
-	color: #fff;
-	margin-bottom: 1.5vh;
-	/* border: 1px red solid; */
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1.5vh;
+    /* border: 1px red solid; */
 }
 
 #footer #title-container {
-	font-family: 'Catamaran', sans-serif;
-	line-height: 5vh;
-	margin-bottom: 0.5vh;
-	overflow: hidden;
-	white-space: normal;
-	text-overflow: ellipsis;
-	line-clamp: 2;
-	/* border: 1px red solid; */
+    font-family: 'Catamaran', sans-serif;
+    line-height: 5vh;
+    margin-bottom: 0.5vh;
+    overflow: hidden;
+    white-space: normal;
+    text-overflow: ellipsis;
+    line-clamp: 2;
+    /* border: 1px red solid; */
 }
 
 #footer #subtitle-container {
-	font-family: 'Catamaran', sans-serif;
-	font-weight: 700;
-	line-height: 5vh;
-	/* border: 1px red solid; */
+    font-family: 'Catamaran', sans-serif;
+    font-weight: 700;
+    line-height: 5vh;
+    /* border: 1px red solid; */
 }
 #footer p {
-	display: -webkit-box;
-	white-space: normal;
-	overflow: hidden;
-	/* Ellipsis doesn't render in Chromium:
+    display: -webkit-box;
+    white-space: normal;
+    overflow: hidden;
+    /* Ellipsis doesn't render in Chromium:
 	 * https://bugs.chromium.org/p/chromium/issues/detail?id=1156557
 	 */
-	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 2;
-	text-overflow: ellipsis;
-	text-align: left;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+    text-align: left;
 }
 
 #timewarp-indicator {
-	position: fixed;
-	left: 1vw;
-	top: 1vw;
-	width: 0.3vw;
-	height: 0.3vw;
-	background-color: #f00;
-	border-radius: 0.3vw;
-	border: #600 solid 0.1vw;
-	opacity: 75%;
+    position: fixed;
+    left: 1vw;
+    top: 1vw;
+    width: 0.3vw;
+    height: 0.3vw;
+    background-color: #f00;
+    border-radius: 0.3vw;
+    border: #600 solid 0.1vw;
+    opacity: 75%;
 }
 
 #timewarp-indicator::slotted {
-	content: ' ';
+    content: ' ';
 }

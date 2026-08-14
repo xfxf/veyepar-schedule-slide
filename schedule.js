@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // Shown when there are no more events today in a room.
 const FINISHED_FOR_DAY_TITLE = 'Finished for the day!';
@@ -61,9 +61,12 @@ const TIME_CAPS = document.body.dataset.timecaps === '1';
 const LOCALE = document.body.lang || 'en-AU';
 
 const FORMATTER = new Intl.DateTimeFormat(LOCALE, {
-	hour: 'numeric',
-	minute: 'numeric',
-	hour12: document.body.dataset.hour12 === undefined ? undefined : document.body.dataset.hour12 === '1',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12:
+        document.body.dataset.hour12 === undefined
+            ? undefined
+            : document.body.dataset.hour12 === '1',
 });
 
 const startingAtElem = document.getElementById('starting-at');
@@ -77,7 +80,9 @@ const roomSchedule = [];
 // Veyepar schedule JSON URL
 // https://portal2.nextdayvideo.com.au/main/C/{...}/S/{...}.json
 // Cache bust every 5 minutes (but we don't actually reload this).
-const SCHEDULE_URL = `https://portal.nextdayvideo.com.au/main/C/${options.client}/S/${options.show}.json?_=` + Math.floor((new Date()).getTime() / 300000);
+const SCHEDULE_URL =
+    `https://portal.nextdayvideo.com.au/main/C/${options.client}/S/${options.show}.json?_=` +
+    Math.floor(new Date().getTime() / 300000);
 // const SCHEDULE_URL = './schedule.json?_=' + Math.floor((new Date()).getTime() / 300000);
 
 /**
@@ -86,17 +91,17 @@ const SCHEDULE_URL = `https://portal.nextdayvideo.com.au/main/C/${options.client
  * The time value passed is always positive (in the future).
  */
 function formatRelativeTime(time) {
-	const mins = Math.ceil(time / 60_000);
-	const hours = Math.floor(time / 3600_000);
-	const days = Math.floor(time / 86_400_000);
+    const mins = Math.ceil(time / 60_000);
+    const hours = Math.floor(time / 3600_000);
+    const days = Math.floor(time / 86_400_000);
 
-	if (hours == 0) {
-		return `In ${mins} minute${mins == 1 ? '' : 's'}`;
-	} else if (days == 0) {
-		return `In ${hours} hour${hours == 1 ? '' : 's'}`;
-	} else {
-		return `In ${days} day${days == 1 ? '' : 's'}`;
-	}
+    if (hours == 0) {
+        return `In ${mins} minute${mins == 1 ? '' : 's'}`;
+    } else if (days == 0) {
+        return `In ${hours} hour${hours == 1 ? '' : 's'}`;
+    } else {
+        return `In ${days} day${days == 1 ? '' : 's'}`;
+    }
 }
 
 /**
@@ -105,75 +110,75 @@ function formatRelativeTime(time) {
  * @returns {String} formatted time
  */
 function formatTime(date) {
-	let o = FORMATTER.format(date);
-	if (TIME_CAPS) {
-		o = o.toUpperCase();
-	}
-	return o;
+    let o = FORMATTER.format(date);
+    if (TIME_CAPS) {
+        o = o.toUpperCase();
+    }
+    return o;
 }
 
 /**
  * Displays an error message on fatal errors.
  */
 function fatal(message) {
-	titleElem.innerText = ERROR_MESSAGE;
-	startingAtElem.innerText = '';
-	presenterElem.innerText = message;
+    titleElem.innerText = ERROR_MESSAGE;
+    startingAtElem.innerText = '';
+    presenterElem.innerText = message;
 }
 
 /**
  * Get all passed query parameters to the page.
  */
 function getQueryParams() {
-	const ret = {};
-	const params = new URLSearchParams(document.location.search);
-	if (params.size == 0) {
-		// no params available.
-		console.error('No query parameters specified')
-		return ret;
-	}
+    const ret = {};
+    const params = new URLSearchParams(document.location.search);
+    if (params.size == 0) {
+        // no params available.
+        console.error('No query parameters specified');
+        return ret;
+    }
 
-	for (const [key, val] of params.entries()) {
-		if (key in ret) {
-			console.warn(`Ignoring redefined parameter: ${key}=${val}`);
-			continue;
-		}
+    for (const [key, val] of params.entries()) {
+        if (key in ret) {
+            console.warn(`Ignoring redefined parameter: ${key}=${val}`);
+            continue;
+        }
 
-		if (val === undefined) {
-			console.warn(`Ignoring undefined parameter: ${key}`);
-			continue;
-		}
+        if (val === undefined) {
+            console.warn(`Ignoring undefined parameter: ${key}`);
+            continue;
+        }
 
-		ret[key] = val;
-	}
+        ret[key] = val;
+    }
 
-	return ret;
+    return ret;
 }
 
 /**
  * Parse all options passed to the page.
  */
 function getOptions() {
-	const params = getQueryParams();
+    const params = getQueryParams();
 
-	// For testing: set `lt` to a time to treat as the "load time" of this page.
-	var timeWarp = 0;
-	if (params['lt']) {
-		timeWarp = ((new Date(params['lt'])).getTime() - (new Date()).getTime());
-	}
-	if (Number.isNaN(timeWarp)) {
-		timeWarp = 0;
-	}
+    // For testing: set `lt` to a time to treat as the "load time" of this page.
+    var timeWarp = 0;
+    if (params['lt']) {
+        timeWarp = new Date(params['lt']).getTime() - new Date().getTime();
+    }
+    if (Number.isNaN(timeWarp)) {
+        timeWarp = 0;
+    }
 
-	return {
-		// Select the room that we're in
-		room: params['r'],
-		show: params['show'] ? params['show'] : DEFAULT_SHOW,
-		client: params['client'] ? params['client'] : DEFAULT_CLIENT,
-		timeWarp: timeWarp,
-		clockOnly: params['c'] == '1',
-		message: params['m'],
-	};
+    return {
+        // Select the room that we're in
+        room: params['r'],
+        show: params['show'] ? params['show'] : DEFAULT_SHOW,
+        client: params['client'] ? params['client'] : DEFAULT_CLIENT,
+        timeWarp: timeWarp,
+        clockOnly: params['c'] == '1',
+        message: params['m'],
+    };
 }
 
 /**
@@ -182,34 +187,34 @@ function getOptions() {
  * Returns a Promise, resolved with the parsed schedule JSON.
  */
 function getSchedule() {
-	return new Promise((resolve, reject) => {
-		const req = new XMLHttpRequest();
-		req.addEventListener('load', () => {
-			if (req.status == 200) {
-				var schedule;
-				try {
-					schedule = JSON.parse(req.response);
-				} catch (e) {
-					reject('Error parsing schedule: ' + e);
-					return;
-				}
+    return new Promise((resolve, reject) => {
+        const req = new XMLHttpRequest();
+        req.addEventListener('load', () => {
+            if (req.status == 200) {
+                var schedule;
+                try {
+                    schedule = JSON.parse(req.response);
+                } catch (e) {
+                    reject('Error parsing schedule: ' + e);
+                    return;
+                }
 
-				if (!schedule || !Array.isArray(schedule)) {
-					reject('Incorrect type for schedule');
-				} else {
-					resolve(schedule);
-				}
-			} else {
-				reject('Error loading schedule: HTTP ' + req.status);
-			}
-		});
-		req.addEventListener('error', () => {
-			reject('Error fetching schedule');
-		});
+                if (!schedule || !Array.isArray(schedule)) {
+                    reject('Incorrect type for schedule');
+                } else {
+                    resolve(schedule);
+                }
+            } else {
+                reject('Error loading schedule: HTTP ' + req.status);
+            }
+        });
+        req.addEventListener('error', () => {
+            reject('Error fetching schedule');
+        });
 
-		req.open('GET', SCHEDULE_URL);
-		req.send();
-	});
+        req.open('GET', SCHEDULE_URL);
+        req.send();
+    });
 }
 
 /**
@@ -217,38 +222,37 @@ function getSchedule() {
  * @param {String} duration
  */
 function parseDuration(duration) {
-	// Serialisation: https://github.com/CarlFK/veyepar/blob/d2e168161748f5076b24240844b9f4bff8695e79/dj/main/views.py#L367
-	// This dumps out the underlying Episode objects as JSON.
-	//
-	// `Episode.duration` defined here:
-	// https://github.com/CarlFK/veyepar/blob/4337edf3a917cc4e8371f469d32669dd8c4d538b/dj/main/models.py#L284-L285
-	// This is declared as "HH:MM:SS", but is stored in a CharField.
-	duration = duration.split(':', 3);
-	return (parseInt(duration[0]) * 3600) + (parseInt(duration[1]) * 60) + parseInt(duration[2]);
+    // Serialisation: https://github.com/CarlFK/veyepar/blob/d2e168161748f5076b24240844b9f4bff8695e79/dj/main/views.py#L367
+    // This dumps out the underlying Episode objects as JSON.
+    //
+    // `Episode.duration` defined here:
+    // https://github.com/CarlFK/veyepar/blob/4337edf3a917cc4e8371f469d32669dd8c4d538b/dj/main/models.py#L284-L285
+    // This is declared as "HH:MM:SS", but is stored in a CharField.
+    duration = duration.split(':', 3);
+    return parseInt(duration[0]) * 3600 + parseInt(duration[1]) * 60 + parseInt(duration[2]);
 }
 
 function getCurrentOrNextEvent(nowMillis) {
-	var nextEvent = null;
+    var nextEvent = null;
 
-	for (const event of roomSchedule) {
-		const end = Math.min(
-			event.startMillis + (MAX_DURATION_SECS * 1000), event.endMillis);
+    for (const event of roomSchedule) {
+        const end = Math.min(event.startMillis + MAX_DURATION_SECS * 1000, event.endMillis);
 
-		if (event.startMillis <= nowMillis && end > nowMillis) {
-			// Current event!
-			return event;
-		}
+        if (event.startMillis <= nowMillis && end > nowMillis) {
+            // Current event!
+            return event;
+        }
 
-		if (event.startMillis > nowMillis) {
-			// Upcoming event, is it the latest?
-			if (!nextEvent || nextEvent.startMillis > event.startMillis) {
-				nextEvent = event;
-			}
-		}
-	}
+        if (event.startMillis > nowMillis) {
+            // Upcoming event, is it the latest?
+            if (!nextEvent || nextEvent.startMillis > event.startMillis) {
+                nextEvent = event;
+            }
+        }
+    }
 
-	// May also return null, if all events are done for the day.
-	return nextEvent;
+    // May also return null, if all events are done for the day.
+    return nextEvent;
 }
 
 /**
@@ -258,9 +262,9 @@ function getCurrentOrNextEvent(nowMillis) {
  * @param {String} newText New text to set.
  */
 function setInnerText(elem, newText) {
-	if (elem.innerText != newText) {
-		elem.innerText = newText;
-	}
+    if (elem.innerText != newText) {
+        elem.innerText = newText;
+    }
 }
 
 /**
@@ -268,124 +272,142 @@ function setInnerText(elem, newText) {
  * @returns Current time in milliseconds since epoch.
  */
 function updateClock() {
-	if (timeWarpElem != null) {
-		timeWarpElem.style.display = options.timeWarp != 0 ? '' : 'none';
-	}
+    if (timeWarpElem != null) {
+        timeWarpElem.style.display = options.timeWarp != 0 ? '' : 'none';
+    }
 
-	const nowMillis = (new Date()).getTime() + options.timeWarp;
-	setInnerText(nowElem, formatTime(new Date(nowMillis)));
-	return nowMillis;
+    const nowMillis = new Date().getTime() + options.timeWarp;
+    setInnerText(nowElem, formatTime(new Date(nowMillis)));
+    return nowMillis;
 }
 
 function updateDisplay() {
-	const nowMillis = updateClock();
-	var event = getCurrentOrNextEvent(nowMillis);
+    const nowMillis = updateClock();
+    var event = getCurrentOrNextEvent(nowMillis);
 
-	if (event == null) {
-		setInnerText(startingAtElem, '');
-		setInnerText(titleElem, FINISHED_FOR_DAY_TITLE);
-		setInnerText(presenterElem, FINISHED_FOR_DAY_MESSAGE.replace('{room}', options.room));
-		return;
-	} else if (event.startMillis > nowMillis + (CURRENT_EVENT_START_SECS * 1000)) {
-		// Upcoming event
-		if (NEXT_EVENT_REMAINING) {
-			setInnerText(startingAtElem, formatRelativeTime(event.startMillis - nowMillis));
-		} else {
-			setInnerText(startingAtElem, NEXT_EVENT_TITLE.replace('{time}', formatTime(event.start)));
-		}
-	} else {
-		// Current event
-		setInnerText(startingAtElem, CURRENT_EVENT_TITLE);
-	}
-	setInnerText(titleElem, event.name);
-	setInnerText(presenterElem, event.authors);
+    if (event == null) {
+        setInnerText(startingAtElem, '');
+        setInnerText(titleElem, FINISHED_FOR_DAY_TITLE);
+        setInnerText(presenterElem, FINISHED_FOR_DAY_MESSAGE.replace('{room}', options.room));
+        return;
+    } else if (event.startMillis > nowMillis + CURRENT_EVENT_START_SECS * 1000) {
+        // Upcoming event
+        if (NEXT_EVENT_REMAINING) {
+            setInnerText(startingAtElem, formatRelativeTime(event.startMillis - nowMillis));
+        } else {
+            setInnerText(
+                startingAtElem,
+                NEXT_EVENT_TITLE.replace('{time}', formatTime(event.start))
+            );
+        }
+    } else {
+        // Current event
+        setInnerText(startingAtElem, CURRENT_EVENT_TITLE);
+    }
+    setInnerText(titleElem, event.name);
+    setInnerText(presenterElem, event.authors);
 }
 
 (() => {
-	document.addEventListener('keypress', (ev) => {
-		let delta = 0;
-		switch (ev.key) {
-			case 'q':
-			case 'h':
-				// -24 hours
-				delta = -86_400_000;
-				break;
-			case 'J':
-				// -30 minutes
-				delta = -1_800_000;
-				break;
-			case 'j':
-				// -5 minutes
-				delta = -300_000;
-				break;
-			case 'k':
-				// +5 minutes
-				delta = 300_000;
-				break;
-			case 'K':
-				// +30 minutes
-				delta = 1_800_000;
-				break;
-			case 'x':
-			case 'l':
-				// +24 hours
-				delta = 86_400_000;
-				break;
-			case 'n':
-				console.log('Time warp disabled');
-				options.timeWarp = 0;
-				ev.preventDefault();
-				return;
-		}
+    document.addEventListener('keypress', (ev) => {
+        let delta = 0;
+        switch (ev.key) {
+            case 'q':
+            case 'h':
+                // -24 hours
+                delta = -86_400_000;
+                break;
+            case 'J':
+                // -30 minutes
+                delta = -1_800_000;
+                break;
+            case 'j':
+                // -5 minutes
+                delta = -300_000;
+                break;
+            case 'k':
+                // +5 minutes
+                delta = 300_000;
+                break;
+            case 'K':
+                // +30 minutes
+                delta = 1_800_000;
+                break;
+            case 'x':
+            case 'l':
+                // +24 hours
+                delta = 86_400_000;
+                break;
+            case 'n':
+                console.log('Time warp disabled');
+                options.timeWarp = 0;
+                ev.preventDefault();
+                return;
+        }
 
-		if (delta != 0) {
-			options.timeWarp += delta;
-			const nowMillis = (new Date()).getTime() + options.timeWarp;
-			console.log(`Time warp: ${options.timeWarp / 1000} seconds (press n to reset)`)
-			ev.preventDefault();
-		}
-	});
+        if (delta != 0) {
+            options.timeWarp += delta;
+            const nowMillis = new Date().getTime() + options.timeWarp;
+            console.log(`Time warp: ${options.timeWarp / 1000} seconds (press n to reset)`);
+            ev.preventDefault();
+        }
+    });
 
-	if (options.clockOnly) {
-		updateClock();
-		setInterval(updateClock, 1000);
-		titleElem.innerText = (options.message || '');
-		return;
-	}
+    if (options.clockOnly) {
+        updateClock();
+        setInterval(updateClock, 1000);
+        titleElem.innerText = options.message || '';
+        return;
+    }
 
-	getSchedule().then((scheduleData) => {
-		const loadTime = new Date((new Date()).getTime() + options.timeWarp);
-		if (options.timeWarp != 0) {
-			console.log('Timewarp engaged: ' + (options.timeWarp > 0 ? '+' : '') + options.timeWarp + ' ms. Current time: ' + loadTime);
-		}
+    getSchedule()
+        .then((scheduleData) => {
+            const loadTime = new Date(new Date().getTime() + options.timeWarp);
+            if (options.timeWarp != 0) {
+                console.log(
+                    'Timewarp engaged: ' +
+                        (options.timeWarp > 0 ? '+' : '') +
+                        options.timeWarp +
+                        ' ms. Current time: ' +
+                        loadTime
+                );
+            }
 
-		// Find which room should apply
-		const roomList = new Set(scheduleData.map(e => e.location));
-		const roomSlugList = new Set(scheduleData.map(e => e.location_slug));
-		if (!(roomList.has(options.room) || roomSlugList.has(options.room))) {
-			fatal('Unknown room (?r=' + (options.room || '') + '), options: ' + Array.from(roomSlugList).join(', '));
-			return;
-		}
+            // Find which room should apply
+            const roomList = new Set(scheduleData.map((e) => e.location));
+            const roomSlugList = new Set(scheduleData.map((e) => e.location_slug));
+            if (!(roomList.has(options.room) || roomSlugList.has(options.room))) {
+                fatal(
+                    'Unknown room (?r=' +
+                        (options.room || '') +
+                        '), options: ' +
+                        Array.from(roomSlugList).join(', ')
+                );
+                return;
+            }
 
-		scheduleData = scheduleData.filter(e => e.location == options.room || e.location_slug == options.room);
+            scheduleData = scheduleData.filter(
+                (e) => e.location == options.room || e.location_slug == options.room
+            );
 
-		// Add in start and end times as unix millis
-		for (const event of scheduleData) {
-			event.start = new Date(event.start);
-			event.startMillis = event.start.getTime();
-			event.durationSeconds = parseDuration(event.duration);
-			event.end = new Date(event.end);
-			event.endMillis = event.startMillis + (event.durationSeconds * 1000);
-		}
+            // Add in start and end times as unix millis
+            for (const event of scheduleData) {
+                event.start = new Date(event.start);
+                event.startMillis = event.start.getTime();
+                event.durationSeconds = parseDuration(event.duration);
+                event.end = new Date(event.end);
+                event.endMillis = event.startMillis + event.durationSeconds * 1000;
+            }
 
-		// Sort by start time.
-		scheduleData.sort((a, b) => a.startMillis - b.startMillis);
-		roomSchedule.push(...scheduleData);
+            // Sort by start time.
+            scheduleData.sort((a, b) => a.startMillis - b.startMillis);
+            roomSchedule.push(...scheduleData);
 
-		// Kick-off automatic updates of the schedule
-		setInterval(updateDisplay, 1000);
-		updateDisplay();
-	}).catch((error) => {
-		fatal(error);
-	});
+            // Kick-off automatic updates of the schedule
+            setInterval(updateDisplay, 1000);
+            updateDisplay();
+        })
+        .catch((error) => {
+            fatal(error);
+        });
 })();
