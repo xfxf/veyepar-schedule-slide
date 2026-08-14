@@ -127,6 +127,9 @@ const TIME_CAPS = document.body.dataset.timecaps === '1';
 // Locale to use for date formatting.
 const LOCALE = document.body.lang || 'en-AU';
 
+// Use the layout for showing two events at once.
+const TWO_EVENTS = document.body.dataset.twoevents === '1';
+
 const FORMATTER = new Intl.DateTimeFormat(LOCALE, {
     hour: 'numeric',
     minute: 'numeric',
@@ -310,41 +313,62 @@ function parseDuration(duration) {
 }
 
 /**
- * Get the current or next event.
+ * Get the current or next event, and the one after it.
+ *
+ * May return `null` entries where we are done for the day.
+ *
+ * `second` will always be `null` if `!TWO_EVENTS`.
  * @param {number} nowMillis - current time in milliseconds since epoch
- * @returns {Episode?}
+ * @returns {{first: Episode?, second: Episode?}}
  */
-function getCurrentOrNextEvent(nowMillis) {
-    var nextEvent = null;
+function getFeaturedEvents(nowMillis) {
+    var o = {
+        first: null,
+        second: null,
+    };
 
+    // roomSchedule should be in chronological order
     for (const event of roomSchedule) {
         const end = Math.min(event.startMillis + MAX_DURATION_SECS * 1000, event.endMillis);
 
         if (event.startMillis <= nowMillis && end > nowMillis) {
             // Current event!
-            return event;
+            o.first = event;
+            if (!TWO_EVENTS) {
+                break;
+            }
+            continue;
         }
 
+        // Upcoming event
         if (event.startMillis > nowMillis) {
-            // Upcoming event, is it the latest?
-            if (!nextEvent || nextEvent.startMillis > event.startMillis) {
-                nextEvent = event;
+            if (!o.first) {
+                // No "first" event yet
+                o.first = event;
+                if (!TWO_EVENTS) {
+                    break;
+                }
+                continue;
+            } else {
+                // Second event
+                o.second = event;
+                break;
             }
         }
     }
 
-    // May also return null, if all events are done for the day.
-    return nextEvent;
+    return o;
 }
 
 /**
- * Set innerText property of an element, if it has changed.
- * This avoids forcing page doing a page re-layout.
- * @param {HTMLElement} elem The element to change.
+ * Set `innerText` property of an element, if it has changed.
+ *
+ * This avoids forcing the browser to do a page re-layout, and potentially flicker.
+ * @param {HTMLElement?} elem The element to change. If `null`, changes nothing.
  * @param {String} newText New text to set.
  */
 function setInnerText(elem, newText) {
-    if (elem.innerText != newText) {
+    if (elem && elem.innerText != newText) {
         elem.innerText = newText;
     }
 }
@@ -368,29 +392,31 @@ function updateClock() {
  */
 function updateDisplay() {
     const nowMillis = updateClock();
-    var event = getCurrentOrNextEvent(nowMillis);
+    const { first, second } = getFeaturedEvents(nowMillis);
 
-    if (event == null) {
+    if (!first) {
         setInnerText(startingAtElem, '');
         setInnerText(titleElem, FINISHED_FOR_DAY_TITLE);
         setInnerText(presenterElem, FINISHED_FOR_DAY_MESSAGE.replace('{room}', options.room));
         return;
-    } else if (event.startMillis > nowMillis + CURRENT_EVENT_START_SECS * 1000) {
-        // Upcoming event
+    } else if (first.startMillis > nowMillis + CURRENT_EVENT_START_SECS * 1000) {
+        // First event is upcoming
         if (NEXT_EVENT_REMAINING) {
-            setInnerText(startingAtElem, formatRelativeTime(event.startMillis - nowMillis));
+            setInnerText(startingAtElem, formatRelativeTime(first.startMillis - nowMillis));
         } else {
             setInnerText(
                 startingAtElem,
-                NEXT_EVENT_TITLE.replace('{time}', formatTime(event.start))
+                NEXT_EVENT_TITLE.replace('{time}', formatTime(first.start))
             );
         }
     } else {
-        // Current event
+        // First event is now
         setInnerText(startingAtElem, CURRENT_EVENT_TITLE);
     }
-    setInnerText(titleElem, event.name);
-    setInnerText(presenterElem, event.authors);
+    setInnerText(titleElem, first.name);
+    setInnerText(presenterElem, first.authors);
+
+    // TODO: second event handling
 }
 
 (() => {
