@@ -128,7 +128,7 @@ const TIME_CAPS = document.body.dataset.timecaps === '1';
 const LOCALE = document.body.lang || 'en-AU';
 
 // Use the layout for showing two events at once.
-const TWO_EVENTS = document.body.dataset.twoevents === '1';
+const TWO_EVENTS = document.body.dataset.twoEvents === '1';
 
 const FORMATTER = new Intl.DateTimeFormat(LOCALE, {
     hour: 'numeric',
@@ -139,9 +139,18 @@ const FORMATTER = new Intl.DateTimeFormat(LOCALE, {
             : document.body.dataset.hour12 === '1',
 });
 
-const startingAtElem = document.getElementById('starting-at');
-const titleElem = document.getElementById('title');
-const presenterElem = document.getElementById('presenter');
+const firstElem = {
+    startingAtElem: document.getElementById('starting-at'),
+    titleElem: document.getElementById('title'),
+    presenterElem: document.getElementById('presenter'),
+};
+
+const secondElem = {
+    startingAtElem: document.getElementById('starting-at2'),
+    titleElem: document.getElementById('title2'),
+    presenterElem: document.getElementById('presenter2'),
+};
+
 const nowElem = document.getElementById('now');
 const timeWarpElem = document.getElementById('timewarp-indicator');
 const options = getOptions();
@@ -197,9 +206,12 @@ function formatTime(date) {
  * @param {string} message - message to show
  */
 function fatal(message) {
-    titleElem.innerText = ERROR_MESSAGE;
-    startingAtElem.innerText = '';
-    presenterElem.innerText = message;
+    setInnerText(firstElem.titleElem, ERROR_MESSAGE);
+    setInnerText(firstElem.presenterElem, message);
+    setInnerText(firstElem.startingAtElem, '');
+    setInnerText(secondElem.titleElem, '');
+    setInnerText(secondElem.presenterElem, '');
+    setInnerText(secondElem.startingAtElem, '');
 }
 
 /**
@@ -388,6 +400,39 @@ function updateClock() {
 }
 
 /**
+ * Refresh episode info
+ * @param {{startingAtElem: HTMLElement?, titleElem: HTMLElement?, presenterElem: HTMLElement?}} elem - target elements
+ * @param {Episode?} episode - episode data
+ * @param {number} nowMillis - current time in milliseconds including timewarp
+ */
+function fillElems(elem, episode, nowMillis) {
+    if (!episode) {
+        setInnerText(elem.startingAtElem, '');
+        setInnerText(elem.presenterElem, '');
+        setInnerText(elem.titleElem, '');
+        return;
+    }
+
+    if (episode.startMillis > nowMillis + CURRENT_EVENT_START_SECS * 1000) {
+        // Event is upcoming
+        if (NEXT_EVENT_REMAINING) {
+            setInnerText(elem.startingAtElem, formatRelativeTime(first.startMillis - nowMillis));
+        } else {
+            setInnerText(
+                elem.startingAtElem,
+                NEXT_EVENT_TITLE.replace('{time}', formatTime(episode.start))
+            );
+        }
+    } else {
+        // Event is now
+        setInnerText(elem.startingAtElem, CURRENT_EVENT_TITLE);
+    }
+
+    setInnerText(elem.titleElem, episode.name);
+    setInnerText(elem.presenterElem, episode.authors);
+}
+
+/**
  * Refresh all the things.
  */
 function updateDisplay() {
@@ -395,28 +440,24 @@ function updateDisplay() {
     const { first, second } = getFeaturedEvents(nowMillis);
 
     if (!first) {
-        setInnerText(startingAtElem, '');
-        setInnerText(titleElem, FINISHED_FOR_DAY_TITLE);
-        setInnerText(presenterElem, FINISHED_FOR_DAY_MESSAGE.replace('{room}', options.room));
+        setInnerText(firstElem.startingAtElem, '');
+        setInnerText(firstElem.titleElem, FINISHED_FOR_DAY_TITLE);
+        setInnerText(
+            firstElem.presenterElem,
+            FINISHED_FOR_DAY_MESSAGE.replace('{room}', options.room)
+        );
+        fillElems(second, null, nowMillis);
         return;
-    } else if (first.startMillis > nowMillis + CURRENT_EVENT_START_SECS * 1000) {
-        // First event is upcoming
-        if (NEXT_EVENT_REMAINING) {
-            setInnerText(startingAtElem, formatRelativeTime(first.startMillis - nowMillis));
-        } else {
-            setInnerText(
-                startingAtElem,
-                NEXT_EVENT_TITLE.replace('{time}', formatTime(first.start))
-            );
-        }
-    } else {
-        // First event is now
-        setInnerText(startingAtElem, CURRENT_EVENT_TITLE);
     }
-    setInnerText(titleElem, first.name);
-    setInnerText(presenterElem, first.authors);
 
-    // TODO: second event handling
+    fillElems(firstElem, first, nowMillis);
+
+    if (!TWO_EVENTS || !second) {
+        return;
+    }
+
+    // Second event handling.
+    fillElems(secondElem, second, nowMillis);
 }
 
 (() => {

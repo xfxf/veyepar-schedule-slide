@@ -79,6 +79,20 @@ Options are set via query parameters:
 
   **Example:** `?client=pycon&show=pycon_2021` will load in that specific schedule data, if it exists.
 
+## Data attributes
+
+These data attributes must be on the `<body>` tag of the page:
+
+* `lang`: language used for formatting timestamps
+* `data-client`: the client slug in Veyepar
+* `data-show`: the show slug in Veyepar
+* `data-hour12`: when `1`, use 12-hour time rather than the locale default
+* `data-timecaps`: when `1`, show am/pm in UPPER CASE, regardless of locale representation
+* `data-current-event-start-secs`: if the event starts in less than this number of seconds, show it as the current event (default: 60)
+* `data-max-duration-secs`: the maximum number of seconds after the event's start time to keep treating it as the current event (default: 600)
+* `data-next-event-remaining`: when `1`, show the time remaining to the next event, rather than absolute time
+* `data-two-events`: when `1`, render/fetch two upcoming events, rather than just one.
+
 ## Debugging keys
 
 * <kbd>j</kbd>: time warp backward 5 minutes
