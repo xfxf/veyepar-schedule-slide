@@ -1,5 +1,70 @@
 'use strict';
 
+/**
+ * @typedef RoomOptions
+ * @type object
+ * @property {string} room - room name (as slug)
+ * @property {string} show - show name
+ * @property {string} client - client name
+ * @property {number} timeWarp - number of milliseconds that the display should be timewarped by
+ * @property {boolean} clockOnly - show only the clock (including timewarp)
+ * @property {string} message - custom message display
+ */
+
+/**
+ * [Veyepar presenter type](https://github.com/xfxf/veyepar/blob/12bcfe08ca8f8dd1689275d0a0350522c45533ca/dj/main/views.py#L421-L429)
+ *
+ * @typedef {Object} VeyeparPresenter
+ * @property {string} id - opaque presenter UUID
+ * @property {string} name - presenter's name
+ * @property {string} avatar_url - presenter's photo
+ */
+
+/**
+ * [Veyepar episode type](https://github.com/xfxf/veyepar/blob/12bcfe08ca8f8dd1689275d0a0350522c45533ca/dj/main/views.py#L363)
+ *
+ * Episodes are otherwise known as scheduled event slots. Someone stands up and talks. Everyone
+ * claps. Many words. Then more claps. Then comments from the audience. Then more claps.
+ *
+ * @typedef {Object} VeyeparEpisode
+ * @property {string} start - episode start time as timestamp with zoneinfo
+ * @property {string} start_at - 5 minutes before the episode start time, formatted as `HH:MM dd.mm.YYYY`
+ * @property {string} location - room name
+ * @property {string} location_slug - room slug
+ * @property {string} name - episode name
+ * @property {string} slug - episode slug
+ * @property {string} authors - episode presenter names, concatenated
+ * @property {string} duration - episode duration, as `HH:MM:SS`, or sometimes `HH:MMM:SS`
+ * @property {string} track - episode track name, eg: workshops, education
+ * @property {boolean} prerecord - the episode is pre-recorded
+ * @property {VeyeparPresenter[]} presenters - presenter names
+ * @property {string} conf_url - the URL to the episode on the event's website
+ * @property {string} conf_key - event-specific episode ID
+ */
+
+/**
+ * Our mangling of Veyepar's episode type.
+ *
+ * @typedef {Object} Episode
+ * @property {Date} start - episode start time as Date
+ * @property {number} startMillis - episode start time as milliseconds since epoch
+ * @property {Date} end - episode end time as Date
+ * @property {number} endMillis - episode end time as milliseconds since epoch
+ * @property {number} durationSeconds - episode duration in seconds
+ * @property {string} start_at - 5 minutes before the episode start time, formatted as `HH:MM dd.mm.YYYY`
+ * @property {string} location - room name
+ * @property {string} location_slug - room slug
+ * @property {string} name - episode name
+ * @property {string} slug - episode slug
+ * @property {string} authors - episode presenter names, concatenated
+ * @property {string} duration - episode duration, as `HH:MM:SS`, or sometimes `HH:MMM:SS`
+ * @property {string} track - episode track name, eg: workshops, education
+ * @property {boolean} prerecord - the episode is pre-recorded
+ * @property {VeyeparPresenter[]} presenters - presenter names
+ * @property {string} conf_url - the URL to the episode on the event's website
+ * @property {string} conf_key - event-specific episode ID
+ */
+
 // Shown when there are no more events today in a room.
 const FINISHED_FOR_DAY_TITLE = 'Finished for the day!';
 const FINISHED_FOR_DAY_MESSAGE = 'Proceedings in {room} have finished.';
@@ -38,6 +103,8 @@ const CURRENT_EVENT_START_SECS = parseInt(document.body.dataset.currentEventStar
  * This can be overridden with the `data-max-duration-secs` attribute on the
  * `<body>` tag. If an event's talks consistently start late, then increase this
  * number.
+ *
+ * @type {number}
  */
 const MAX_DURATION_SECS = parseInt(document.body.dataset.maxDurationSecs) || 600;
 
@@ -75,6 +142,11 @@ const presenterElem = document.getElementById('presenter');
 const nowElem = document.getElementById('now');
 const timeWarpElem = document.getElementById('timewarp-indicator');
 const options = getOptions();
+
+/**
+ * This room's schedule.
+ * @type {Episode[]}
+ */
 const roomSchedule = [];
 
 // Veyepar schedule JSON URL
@@ -87,8 +159,8 @@ const SCHEDULE_URL =
 
 /**
  * Formats a relative time in milliseconds.
- *
- * The time value passed is always positive (in the future).
+ * @param {number} time - duration in milliseconds, must be positive
+ * @returns {string} Formatted description, like "In Y minute(s)"
  */
 function formatRelativeTime(time) {
     const mins = Math.ceil(time / 60_000);
@@ -106,7 +178,7 @@ function formatRelativeTime(time) {
 
 /**
  * Formats a time in the default format.
- * @param {Date} date input Date object
+ * @param {Date} date - input Date object
  * @returns {String} formatted time
  */
 function formatTime(date) {
@@ -119,6 +191,7 @@ function formatTime(date) {
 
 /**
  * Displays an error message on fatal errors.
+ * @param {string} message - message to show
  */
 function fatal(message) {
     titleElem.innerText = ERROR_MESSAGE;
@@ -128,6 +201,7 @@ function fatal(message) {
 
 /**
  * Get all passed query parameters to the page.
+ * @returns {Record<string, string>}
  */
 function getQueryParams() {
     const ret = {};
@@ -157,6 +231,8 @@ function getQueryParams() {
 
 /**
  * Parse all options passed to the page.
+ *
+ * @returns {RoomOptions} Room options.
  */
 function getOptions() {
     const params = getQueryParams();
@@ -182,9 +258,9 @@ function getOptions() {
 }
 
 /**
- * Loads the schedule JSON.
+ * Loads the event schedule.
  *
- * Returns a Promise, resolved with the parsed schedule JSON.
+ * @returns {Promise<VeyeparEpisode[]>} parsed schedule data
  */
 function getSchedule() {
     return new Promise((resolve, reject) => {
@@ -220,6 +296,7 @@ function getSchedule() {
 /**
  * Parses a Veyepar duration string into a number of seconds.
  * @param {String} duration
+ * @returns {number}
  */
 function parseDuration(duration) {
     // Serialisation: https://github.com/CarlFK/veyepar/blob/d2e168161748f5076b24240844b9f4bff8695e79/dj/main/views.py#L367
@@ -232,6 +309,11 @@ function parseDuration(duration) {
     return parseInt(duration[0]) * 3600 + parseInt(duration[1]) * 60 + parseInt(duration[2]);
 }
 
+/**
+ * Get the current or next event.
+ * @param {number} nowMillis - current time in milliseconds since epoch
+ * @returns {Episode?}
+ */
 function getCurrentOrNextEvent(nowMillis) {
     var nextEvent = null;
 
@@ -269,7 +351,7 @@ function setInnerText(elem, newText) {
 
 /**
  * Updates the clock on the page.
- * @returns Current time in milliseconds since epoch.
+ * @returns {number} Current time in milliseconds since epoch, including timewarp.
  */
 function updateClock() {
     if (timeWarpElem != null) {
@@ -281,6 +363,9 @@ function updateClock() {
     return nowMillis;
 }
 
+/**
+ * Refresh all the things.
+ */
 function updateDisplay() {
     const nowMillis = updateClock();
     var event = getCurrentOrNextEvent(nowMillis);
@@ -391,6 +476,7 @@ function updateDisplay() {
             );
 
             // Add in start and end times as unix millis
+            // ie: convert VeyeparEpisode to Episode
             for (const event of scheduleData) {
                 event.start = new Date(event.start);
                 event.startMillis = event.start.getTime();
