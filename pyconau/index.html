@@ -13,33 +13,35 @@
         <link rel="stylesheet" href="style.css?_=20260815-00" />
     </head>
 
-    <body data-show="pyconau_2026" data-client="pyconau" data-two-events="1">
+    <body
+        data-show="pyconau_2026"
+        data-client="pyconau"
+        data-next-event-title="Starting at {time}"
+        data-up-next-title="Up next"
+        data-presenter-list="1"
+    >
         <div id="timewarp-indicator"></div>
         <div id="clock-box" class="jakarta">
             <span id="now"></span>
         </div>
 
-        <div id="first">
+        <div id="left">
             <div>
-                <p id="starting-at" class="roboto starting-at"></p>
+                <p id="up-next" class="roboto starting-at"></p>
             </div>
-            <div id="title-container" class="jakarta">
-                <p id="title"></p>
-            </div>
-            <div id="subtitle-container" class="jakarta">
-                <p id="presenter"></p>
+            <div id="subtitle-container" class="jakarta body-text">
+                <ul id="presenter"></ul>
             </div>
         </div>
 
-        <div id="second">
+        <div id="right">
             <div>
-                <p id="starting-at2" class="roboto starting-at"></p>
+                <p id="starting-at" class="roboto starting-at"></p>
             </div>
-            <div id="title-container2" class="jakarta">
-                <p id="title2"></p>
-            </div>
-            <div id="subtitle-container2" class="jakarta">
-                <p id="presenter2"></p>
+
+            <div id="title-container" class="jakarta body-text">
+                <p id="title"></p>
+                <p id="presenter-images"></p>
             </div>
         </div>
 
