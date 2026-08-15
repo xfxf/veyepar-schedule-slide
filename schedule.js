@@ -65,6 +65,16 @@
  * @property {string} conf_key - event-specific episode ID
  */
 
+/**
+ * Element group where schedule data is rendered to.
+ * @typedef {Object} EpisodeElementGroup
+ * @property {HTMLElement?} startingAtElem - element for the "starting at" text
+ * @property {HTMLElement?} titleElem - element for the episode title
+ * @property {HTMLElement?} presenterElem - element for the presenter(s) name(s)
+ * @property {HTMLElement?} presenterImagesElem - element for the presenter images
+ * @property {HTMLElement?} upNextElem - element for the "up next" text
+ */
+
 // Shown when there are no more events today in a room.
 const FINISHED_FOR_DAY_TITLE = 'Finished for the day!';
 const FINISHED_FOR_DAY_MESSAGE = 'Proceedings in {room} have finished.';
@@ -118,8 +128,26 @@ const DEFAULT_SHOW = document.body.dataset.show;
 // Show time remaining to next event, rather than an absolute time.
 const NEXT_EVENT_REMAINING = document.body.dataset.nextEventRemaining == '1';
 
-// Shown for when a next event is scheduled.
-const NEXT_EVENT_TITLE = 'At {time}';
+/**
+ * Insert a `<li>` for each presenter, rather than using the comma-separated
+ * string from Veyepar.
+ */
+const PRESENTER_LIST = document.body.dataset.presenterList == '1';
+
+/**
+ * Shown for when a next event is scheduled, in `startingAtElem`.
+ */
+const NEXT_EVENT_TITLE = document.body.dataset.nextEventTitle || 'At {time}';
+
+/**
+ * Optionally shown when the next event is scheduled, placed in `firstElem.upNextElem`.
+ */
+const UP_NEXT_TITLE = document.body.dataset.upNextTitle;
+
+/**
+ * Optionally shown if there's two events, placed in `secondElem.upNextElem`.
+ */
+const LATER_ON_TITLE = document.body.dataset.laterOnTitle;
 
 // Locale to use for date formatting.
 const LOCALE = document.body.lang || 'en-AU';
@@ -136,16 +164,28 @@ const FORMATTER = new Intl.DateTimeFormat(LOCALE, {
             : document.body.dataset.hour12 === '1',
 });
 
+/**
+ * First episode info target, for the current episode or next episode.
+ * @type {EpisodeElementGroup}
+ */
 const firstElem = {
     startingAtElem: document.getElementById('starting-at'),
     titleElem: document.getElementById('title'),
     presenterElem: document.getElementById('presenter'),
+    presenterImagesElem: document.getElementById('presenter-images'),
+    upNextElem: document.getElementById('up-next'),
 };
 
+/**
+ * Optional second episode info target, for the episode after the first.
+ * @type {EpisodeElementGroup}
+ */
 const secondElem = {
     startingAtElem: document.getElementById('starting-at2'),
     titleElem: document.getElementById('title2'),
     presenterElem: document.getElementById('presenter2'),
+    presenterImagesElem: document.getElementById('presenter-images2'),
+    upNextElem: document.getElementById('up-next2'),
 };
 
 const nowElem = document.getElementById('now');
@@ -200,10 +240,20 @@ function formatTime(date) {
  */
 function fatal(message) {
     setInnerText(firstElem.titleElem, ERROR_MESSAGE);
-    setInnerText(firstElem.presenterElem, message);
+    if (PRESENTER_LIST && firstElem.presenterElem) {
+        let child = document.createElement('li');
+        child.innerText = message;
+        child.className = 'presenter-name error';
+        firstElem.presenterElem.replaceChildren(child);
+    } else {
+        setInnerText(firstElem.presenterElem, message);
+    }
+    if (firstElem.presenterImagesElem) {
+        firstElem.presenterImagesElem.replaceChildren();
+    }
     setInnerText(firstElem.startingAtElem, '');
     setInnerText(secondElem.titleElem, '');
-    setInnerText(secondElem.presenterElem, '');
+    clearPresenters(secondElem);
     setInnerText(secondElem.startingAtElem, '');
 }
 
@@ -370,9 +420,13 @@ function getFeaturedEvents(nowMillis) {
  *
  * This avoids forcing the browser to do a page re-layout, and potentially flicker.
  * @param {HTMLElement?} elem The element to change. If `null`, changes nothing.
- * @param {String} newText New text to set.
+ * @param {String?} newText New text to set.
  */
 function setInnerText(elem, newText) {
+    if (!newText) {
+        newText = '';
+    }
+
     if (elem && elem.innerText != newText) {
         elem.innerText = newText;
     }
@@ -393,16 +447,18 @@ function updateClock() {
 }
 
 /**
- * Refresh episode info
- * @param {{startingAtElem: HTMLElement?, titleElem: HTMLElement?, presenterElem: HTMLElement?}} elem - target elements
- * @param {Episode?} episode - episode data
+ * Insert episode information into the DOM.
+ * @param {EpisodeElementGroup} elem - target elements
+ * @param {Episode?} episode - episode data; if `null`, all target elements will be cleared
  * @param {number} nowMillis - current time in milliseconds including timewarp
+ * @param {boolean} isSecond - `true` if this is for the secondary episode
  */
-function fillElems(elem, episode, nowMillis) {
+function fillElems(elem, episode, nowMillis, isSecond) {
     if (!episode) {
         setInnerText(elem.startingAtElem, '');
-        setInnerText(elem.presenterElem, '');
+        clearPresenters(elem);
         setInnerText(elem.titleElem, '');
+        setInnerText(elem.upNextElem, '');
         return;
     }
 
@@ -421,8 +477,113 @@ function fillElems(elem, episode, nowMillis) {
         setInnerText(elem.startingAtElem, CURRENT_EVENT_TITLE);
     }
 
+    if (isSecond) {
+        setInnerText(elem.upNextElem, LATER_ON_TITLE);
+    } else {
+        setInnerText(elem.upNextElem, UP_NEXT_TITLE);
+    }
+
     setInnerText(elem.titleElem, episode.name);
-    setInnerText(elem.presenterElem, episode.authors);
+
+    if (PRESENTER_LIST && episode.presenters) {
+        const ids = episode.presenters
+            .map((presenter) => {
+                return presenter.id;
+            })
+            .toString();
+
+        if (!ids) {
+            clearPresenters(elem);
+            return;
+        }
+
+        // Get the old state from the presenterElem or presenterImagesElem
+        // as we might not have both.
+        let oldIds = getOldPresenterIds(elem);
+        if (oldIds == ids) {
+            // Presenters unchanged.
+            return;
+        }
+
+        let presenters = [];
+        let presenterImages = [];
+        for (const presenter of episode.presenters) {
+            if (elem.presenterElem && presenter.name) {
+                let child = document.createElement('li');
+                child.innerText = presenter.name;
+                child.className = 'presenter-name';
+                presenters.push(child);
+            }
+
+            if (elem.presenterImagesElem && presenter.avatar_url) {
+                let child = document.createElement('img');
+                child.src = presenter.avatar_url;
+                child.title = presenter.name;
+                child.className = 'presenter-image';
+                if (presenterImages) {
+                    presenterImages.push(' ');
+                }
+                presenterImages.push(child);
+            }
+        }
+
+        if (elem.presenterElem) {
+            elem.presenterElem.replaceChildren(...presenters);
+        }
+
+        if (elem.presenterImagesElem) {
+            elem.presenterImagesElem.replaceChildren(...presenterImages);
+        }
+
+        setOldPresenterIds(elem, ids);
+    } else {
+        // Classic mode
+        setInnerText(elem.presenterElem, episode.authors);
+    }
+}
+
+/**
+ * Clear the presenters from presenter elements.
+ * @param {EpisodeElementGroup} elem - element group to clear
+ */
+function clearPresenters(elem) {
+    if (elem.presenterElem) {
+        elem.presenterElem.replaceChildren();
+        elem.presenterElem.dataset.presenterIds = '';
+    }
+    if (elem.presenterImagesElem) {
+        elem.presenterImagesElem.replaceChildren();
+        elem.presenterImagesElem.dataset.presenterIds = '';
+    }
+}
+
+/**
+ * Retrieve the old presenter ID info from the presenter or presenter images element.
+ * @param {EpisodeElementGroup} elem
+ * @returns {string}
+ */
+function getOldPresenterIds(elem) {
+    if (elem.presenterElem && elem.presenterElem.dataset.presenterIds) {
+        return elem.presenterElem.dataset.presenterIds;
+    }
+    if (elem.presenterImagesElem && elem.presenterImagesElem.dataset.presenterIds) {
+        return elem.presenterImagesElem.dataset.presenterIds;
+    }
+    return '';
+}
+
+/**
+ * Store the old presenter ID info in the presenter or presenter images element.
+ * @param {EpisodeElementGroup} elem - element group the IDs are associated with
+ * @param {string} presenterIds - new presenter ID list
+ * @returns {string}
+ */
+function setOldPresenterIds(elem, presenterIds) {
+    if (elem.presenterElem) {
+        elem.presenterElem.dataset.presenterIds = presenterIds;
+    } else if (elem.presenterImagesElem) {
+        elem.presenterImagesElem.dataset.presenterIds = presenterIds;
+    }
 }
 
 /**
@@ -439,6 +600,7 @@ function updateDisplay() {
             firstElem.presenterElem,
             FINISHED_FOR_DAY_MESSAGE.replace('{room}', options.room)
         );
+        setInnerText(firstElem.upNextElem, '');
         fillElems(second, null, nowMillis);
         return;
     }
