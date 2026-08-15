@@ -121,9 +121,6 @@ const NEXT_EVENT_REMAINING = document.body.dataset.nextEventRemaining == '1';
 // Shown for when a next event is scheduled.
 const NEXT_EVENT_TITLE = 'At {time}';
 
-// Capitalises the formatted time string.
-const TIME_CAPS = document.body.dataset.timecaps === '1';
-
 // Locale to use for date formatting.
 const LOCALE = document.body.lang || 'en-AU';
 
@@ -194,11 +191,7 @@ function formatRelativeTime(time) {
  * @returns {String} formatted time
  */
 function formatTime(date) {
-    let o = FORMATTER.format(date);
-    if (TIME_CAPS) {
-        o = o.toUpperCase();
-    }
-    return o;
+    return FORMATTER.format(date);
 }
 
 /**

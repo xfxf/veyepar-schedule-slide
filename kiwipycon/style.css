@@ -35,6 +35,7 @@ html {
 }
 
 #clock-box p, #clock-shadow p {
+    text-transform: uppercase;
     display: inline-block;
     vertical-align: middle;
     width: 10vw;
