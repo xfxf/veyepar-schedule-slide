@@ -10,19 +10,7 @@ This was originally developed for [PyconlineAU 2020][pyconau2020] – the origin
 
 ## Setting up
 
-1. Provide a `schedule.json` from Veyepar:
-
-   * live data: `./update_schedule.sh` (shell script, requires cURL)
-
-   * live data: `update_schedule.ps1` (PowerShell script)
-
-     [Requires signing][ps-sign], [an Unrestricted execution policy][ps-unrestricted], or running with `type | powershell`:
-
-     ```powershell
-     PS C:\...\veyepar-schedule-slide> type update_schedule.ps1 | powershell
-     ```
-
-2. Serve the checked-out `veyepar-schedule-slide` repository with a web server of your choice.
+1. Serve the checked-out `veyepar-schedule-slide` repository with a web server of your choice.
 
    For local development, you could use Python for this:
 
@@ -32,9 +20,9 @@ This was originally developed for [PyconlineAU 2020][pyconau2020] – the origin
 
    **Warning:** Python's built-in web server is single threaded, and browsers will hold the TCP connection open after loading. This will prevent the page from being loaded in multiple browser windows (or OBS instances).
 
-3. (Optional) If you wish to modify the HTML and CSS (such as change fonts), make a copy of the 'default' directory.
+2. (Optional) If you wish to modify the HTML and CSS (such as change fonts), make a copy of the 'default' directory.
 
-4. In OBS, create a `Browser` source:
+3. In OBS, create a `Browser` source:
 
    * URL: (replace with where you're hosting this, see [options](#options) below)
    * Dimensions: 1920x1080 (or 1280x720), must be 16:9 aspect ratio.
@@ -85,7 +73,7 @@ Options are set via query parameters:
 
 ## Data attributes
 
-These data attributes must be on the `<body>` tag of the page:
+These data attributes configure the slides, and must be on the `<body>` tag of the page:
 
 * `lang`: language used for formatting timestamps
 * `data-client`: the client slug in Veyepar
@@ -93,8 +81,11 @@ These data attributes must be on the `<body>` tag of the page:
 * `data-hour12`: when `1`, use 12-hour time rather than the locale default
 * `data-current-event-start-secs`: if the event starts in less than this number of seconds, show it as the current event (default: 60)
 * `data-max-duration-secs`: the maximum number of seconds after the event's start time to keep treating it as the current event (default: 600)
-* `data-next-event-remaining`: when `1`, show the time remaining to the next event, rather than absolute time
-* `data-two-events`: when `1`, render/fetch two upcoming events, rather than just one.
+* `data-next-event-remaining`: when `1`, show the time remaining to the next event (eg: `In 20 minutes`), rather than absolute time (`At 12:00`)
+* `data-two-events`: when `1`, render/fetch two upcoming events, rather than just one; this expects extra elements with an `id` ending in `2`
+* `data-next-event-title`: when `next-event-remaining` is _unset_, text to show in the `starting-at` element; `{time}` will be replaced with a formatted time (default: `At {time}`).
+* `data-up-next-title`: (optional) text to show in the `up-next` element, defaults to nothing
+* `data-later-on-title`: (optional) text to show in the `up-next2` element, defaults to nothing
 
 ## Debugging keys
 
@@ -110,7 +101,8 @@ These data attributes must be on the `<body>` tag of the page:
 
 With the exception of per-show assets, this software is published under the Apache 2.0 License:
 
-* Copyright 2020-2024 Michael Farrell, Ryan Verner
+* Copyright 2020-2026 Michael Farrell
+* Copyright 2020-2024 Ryan Verner
 * Copyright 2020 Leigh Brenecki
 
 Licensed under the Apache License, Version 2.0 (the "License");
