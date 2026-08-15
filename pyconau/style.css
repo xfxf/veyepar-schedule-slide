@@ -61,7 +61,7 @@ div {
     top: 62vh;
     bottom: 11.5vh;
     color: #000;
-    border: 1px blue solid;
+    /* border: 1px blue solid; */
 }
 
 #left {
@@ -78,7 +78,7 @@ div {
 .starting-at {
     font-size: 4vh;
     margin-bottom: 1.5vh;
-    border: 1px red solid;
+    /* border: 1px red solid; */
 }
 
 .presenter-image {
