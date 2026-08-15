@@ -61,6 +61,10 @@ Options are set via query parameters:
 
   **Example:** `?c=1`
 
+* `t` **(optional, string)**: CSS class attribute to append to the `<body>` tag (for themes).
+
+  **Example:** `?t=main-track`
+
 * `m` **(optional, string)**: Message to display when only showing the clock.
 
   **Example:** `?c=1&m=Hello%20world!`

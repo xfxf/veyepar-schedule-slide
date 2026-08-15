@@ -9,6 +9,7 @@
  * @property {number} timeWarp - number of milliseconds that the display should be timewarped by
  * @property {boolean} clockOnly - show only the clock (including timewarp)
  * @property {string} message - custom message display
+ * @property {string?} theme - CSS class to add to the body of the page
  */
 
 /**
@@ -35,7 +36,7 @@
  * @property {string} slug - episode slug
  * @property {string} authors - episode presenter names, concatenated
  * @property {string} duration - episode duration, as `HH:MM:SS`, or sometimes `HH:MMM:SS`
- * @property {string} track - episode track name, eg: workshops, education
+ * @property {string} track - episode track name, eg: Workshops, Education, Main Track
  * @property {boolean} prerecord - the episode is pre-recorded
  * @property {VeyeparPresenter[]} presenters - presenter names
  * @property {string} conf_url - the URL to the episode on the event's website
@@ -58,7 +59,8 @@
  * @property {string} slug - episode slug
  * @property {string} authors - episode presenter names, concatenated
  * @property {string} duration - episode duration, as `HH:MM:SS`, or sometimes `HH:MMM:SS`
- * @property {string} track - episode track name, eg: workshops, education
+ * @property {string} track - episode track name, eg: Workshops, Education, Main Track
+ * @property {string} trackSlug - episode track name, in slugified form eg: workshops, education, main-track
  * @property {boolean} prerecord - the episode is pre-recorded
  * @property {VeyeparPresenter[]} presenters - presenter names
  * @property {string} conf_url - the URL to the episode on the event's website
@@ -207,6 +209,28 @@ const SCHEDULE_URL =
 // const SCHEDULE_URL = './schedule.json?_=' + Math.floor((new Date()).getTime() / 300000);
 
 /**
+ * Slugify a string similar to how [Django does][0], except replacing `_` with `-`.
+ *
+ * [0]: https://github.com/django/django/blob/3436cf9bce84bb1f6877ad96819637366b27b719/django/utils/text.py#L466
+ * @param {string} i - string to slugify
+ * @returns {string} slugified string
+ */
+function slugify(i) {
+    if (!i) {
+        return '';
+    }
+
+    return i
+        .toString()
+        .normalize('NFKD')
+        .replaceAll(/[^0-9A-Za-z\s-]/g, '')
+        .toLowerCase()
+        .replaceAll(/[-_\s]+/g, '-')
+        .replace(/^-+/, '')
+        .replace(/-+$/, '');
+}
+
+/**
  * Formats a relative time in milliseconds.
  * @param {number} time - duration in milliseconds, must be positive
  * @returns {string} Formatted description, like "In Y minute(s)"
@@ -312,6 +336,7 @@ function getOptions() {
         timeWarp: timeWarp,
         clockOnly: params['c'] == '1',
         message: params['m'],
+        theme: params['t'] || null,
     };
 }
 
@@ -660,6 +685,10 @@ function updateDisplay() {
         }
     });
 
+    if (options.theme) {
+        document.body.className = `${options.theme} ${document.body.className}`.trim();
+    }
+
     if (options.clockOnly) {
         updateClock();
         setInterval(updateClock, 1000);
@@ -705,6 +734,7 @@ function updateDisplay() {
                 event.durationSeconds = parseDuration(event.duration);
                 event.end = new Date(event.end);
                 event.endMillis = event.startMillis + event.durationSeconds * 1000;
+                event.trackSlug = slugify(event.track);
             }
 
             // Sort by start time.
