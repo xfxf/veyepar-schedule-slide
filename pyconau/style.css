@@ -16,16 +16,15 @@ div {
 }
 
 :root {
-    /*
-     * #d9d9d9: loop title text
-     * #dadada: loop ctrix logo, AV thanks text
-     * #e9e9e9: Room-Slide-Holds-V3-G event logo
-     * #eaeaea: loop event logo
-     * #e5e3df: Room-Slide-Holds-V3-G title text and clock
-     * #f6f6f6: loop NDV logo
-     * #ffffff: bin chickens, curlyboi eyes; Room-Slide-Holds-V3-G sponsor logo background
-     */
-    --whiteish: #eaeaea;
+    /* PyConAU_2026 - Colour Breakdowns.pdf, PyCon Australia Style Guide_V1.pdf */
+    --charcoal: #282828;
+    --stone: #eaeaea;
+    --violet: #511fe5;
+    --emerald: #259f4f;
+    --coral: #ef553c;
+    --lavender: #b280ff;
+    --lime: #bdf461;
+    --lemon: #f2bf36;
 }
 
 .jakarta {
@@ -52,7 +51,7 @@ div {
     width: 15vw;
     height: 6.8vh;
     text-align: right;
-    color: var(--whiteish);
+    color: var(--stone);
     /* border: 1px solid red; */
 }
 
@@ -119,6 +118,49 @@ div {
     -webkit-line-clamp: 2;
     text-overflow: ellipsis;
     text-align: left;
+}
+
+/* no theme selected! */
+.starting-at,
+.body-text {
+    background-color: #f00;
+}
+
+/* colour themes */
+.coral .starting-at,
+.emerald .starting-at {
+    color: var(--stone);
+    background: none;
+}
+
+.lemon .starting-at,
+.lime .starting-at {
+    color: var(--violet);
+    background: none;
+}
+
+.stone .starting-at {
+    color: var(--emerald);
+    background: none;
+}
+
+.violet .starting-at {
+    color: var(--lemon);
+    background: none;
+}
+
+.coral .body-text,
+.emerald .body-text,
+.lemon .body-text,
+.lime .body-text,
+.stone .body-text {
+    color: var(--charcoal);
+    background: none;
+}
+
+.violet .body-text {
+    color: var(--stone);
+    background: none;
 }
 
 #timewarp-indicator {
