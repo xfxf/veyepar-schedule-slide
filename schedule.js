@@ -462,12 +462,13 @@ function setInnerText(elem, newText) {
  * @returns {number} Current time in milliseconds since epoch, including timewarp.
  */
 function updateClock() {
-    if (timeWarpElem != null) {
+    if (timeWarpElem) {
         timeWarpElem.style.display = options.timeWarp != 0 ? '' : 'none';
     }
-
     const nowMillis = new Date().getTime() + options.timeWarp;
-    setInnerText(nowElem, formatTime(new Date(nowMillis)));
+    if (nowElem) {
+        setInnerText(nowElem, formatTime(new Date(nowMillis)));
+    }
     return nowMillis;
 }
 
