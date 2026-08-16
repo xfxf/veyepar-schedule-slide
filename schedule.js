@@ -683,6 +683,7 @@ function updateDisplay() {
             const nowMillis = new Date().getTime() + options.timeWarp;
             console.log(`Time warp: ${options.timeWarp / 1000} seconds (press n to reset)`);
             ev.preventDefault();
+            updateDisplay();
         }
     });
 
