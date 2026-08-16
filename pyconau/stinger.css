@@ -1,0 +1,19 @@
+#box {
+    position: fixed;
+    top: 28.5vh;
+    bottom: 34.5vh;
+    left: 7vw;
+    right: 41.8vw;
+
+    color: var(--stone);
+    white-space: normal;
+    /* border: 1px red solid; */
+
+    line-height: 10vh;
+    font-size: 8vh;
+}
+
+.presenter-image {
+    width: 6vw;
+    height: 6vw;
+}
