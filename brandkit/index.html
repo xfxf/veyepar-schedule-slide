@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Up next (Brand Kit)</title>
+
+        <!--
+            The event's look comes from its Brand Kit in the Veyepar portal:
+            one stylesheet with the layout, the event's fonts and its overlay
+            theme. The portal's stream preview draws the same stylesheet, so
+            what organisers see there is what OBS shows.
+
+            Only the portal origin is ever loaded, and only for show and client slugs.
+        -->
+        <script>
+            (function () {
+                var PORTAL = 'https://portal.nextdayvideo.com.au';
+                var params = new URLSearchParams(document.location.search);
+                var show = params.get('show') || '';
+                var client = params.get('client') || '';
+                if (!/^[-\w]+$/.test(show) || !/^[-\w]+$/.test(client)) {
+                    return; // schedule.js reports what's missing
+                }
+                var link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = PORTAL + '/virtual/' + show + '/brand-kit/theme.css?client=' + client;
+                document.head.appendChild(link);
+            })();
+        </script>
+    </head>
+
+    <!--
+        Needs ?show=<show slug>&client=<client slug>&r=<room>. ?t=<class> adds
+        a class to <body>, for themes with several colour variants.
+    -->
+    <body
+        data-next-event-title="Starting at {time}"
+        data-up-next-title="Up next"
+        data-presenter-list="1"
+    >
+        <div id="timewarp-indicator"></div>
+        <div id="clock-box" class="jakarta">
+            <span id="now"></span>
+        </div>
+
+        <div id="left">
+            <div>
+                <p id="up-next" class="roboto starting-at"></p>
+            </div>
+            <div class="jakarta body-text">
+                <ul id="presenter"></ul>
+            </div>
+        </div>
+
+        <div id="right">
+            <div>
+                <p id="starting-at" class="roboto starting-at"></p>
+            </div>
+
+            <div class="jakarta body-text">
+                <p id="title"></p>
+            </div>
+        </div>
+
+        <script src="../schedule.js?_=20261119-00"></script>
+    </body>
+</html>
