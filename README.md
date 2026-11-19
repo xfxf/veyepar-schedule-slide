@@ -29,6 +29,22 @@ This was originally developed for [PyconlineAU 2020][pyconau2020] – the origin
    * Shutdown source when not visible: enable
    * Refresh browser when scene becomes active: enable
 
+## Brand Kit page
+
+`brandkit/` takes an event's whole look from its Brand Kit in the
+[Veyepar portal][veyepar-portal]: layout, fonts and overlay theme, from
+`https://portal.nextdayvideo.com.au/virtual/<show>/brand-kit/theme.css?client=<client>`. Nothing
+here needs changing for a new event, and the portal's stream preview shows the
+same stylesheet.
+
+**Example:** `brandkit/?show=pyconau_2026&client=pyconau&r=ballroom-1&t=violet`
+
+Only the portal origin is loaded, for `show` and `client` that are plain slugs. Themes are
+CSS with `--bk-*` variables and any overrides; `brandkit/examples/pyconau-2026.css`
+is `pyconau/` as a theme, which renders the same as `pyconau/`.
+
+[veyepar-portal]: https://portal.nextdayvideo.com.au/
+
 ## Setting up a new show
 
 See `example/` for a sample show setup with custom CSS.

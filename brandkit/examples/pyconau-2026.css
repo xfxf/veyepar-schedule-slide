@@ -1,0 +1,84 @@
+/*
+ * PyCon AU 2026's "Up next" look as a Brand Kit overlay theme: pyconau/common.css
+ * and loop.css on the Brand Kit layout. Upload it to the event's Brand Kit
+ * (Overlay theme), with Plus Jakarta Sans and Roboto Slab in its Fonts slot.
+ * Choose the colour variant to match each break loop with ?t=coral|emerald|
+ * lemon|lime|stone|violet.
+ */
+:root {
+    /* PyConAU_2026 - Colour Breakdowns.pdf, PyCon Australia Style Guide_V1.pdf */
+    --charcoal: #282828;
+    --stone: #eaeaea;
+    --violet: #511fe5;
+    --emerald: #259f4f;
+    --coral: #ef553c;
+    --lavender: #b280ff;
+    --lime: #bdf461;
+    --lemon: #f2bf36;
+
+    --bk-band: transparent; /* the break loops paint their own band */
+    --bk-clock: var(--stone);
+    --bk-font: 'Plus Jakarta Sans', sans-serif;
+    --bk-heading-font: 'Roboto Slab', serif;
+}
+
+.jakarta {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+}
+
+.roboto {
+    font-family: 'Roboto Slab', serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+#timewarp-indicator {
+    background-color: var(--coral);
+    border: var(--violet) solid 0.1vw;
+}
+
+/* no theme selected! */
+.starting-at,
+.body-text {
+    background-color: #f00;
+}
+
+.coral .starting-at,
+.emerald .starting-at {
+    color: var(--stone);
+    background: none;
+}
+
+.lemon .starting-at,
+.lime .starting-at {
+    color: var(--violet);
+    background: none;
+}
+
+.stone .starting-at {
+    color: var(--emerald);
+    background: none;
+}
+
+.violet .starting-at {
+    color: var(--lemon);
+    background: none;
+}
+
+.coral .body-text,
+.emerald .body-text,
+.lemon .body-text,
+.lime .body-text,
+.stone .body-text {
+    color: var(--charcoal);
+    background: none;
+}
+
+.violet .body-text {
+    color: var(--stone);
+    background: none;
+}
